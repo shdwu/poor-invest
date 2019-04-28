@@ -7,23 +7,40 @@ import request = require("request");
 import { IVerifyOptions } from "passport-local";
 import "../config/passport";
 
+// =============== Mobile ====================
+
 export let mobileLogin = (req: Request, res: Response) => {
   if (req.user) {
-    return res.redirect("/");
+    return res.redirect("/mobile");
   }
   res.render("mobile/login", {
     title: "Login"
   });
 };
 
+export let mobileLogout = (req: Request, res: Response) => {
+  req.logout();
+  res.redirect("/mobile");
+};
+
+
+// =============== PC ====================
+
 export let pcLogin = (req: Request, res: Response) => {
   if (req.user) {
-    return res.redirect("/");
+    return res.redirect("/pc");
   }
   res.render("pc/login", {
     title: "Login"
   });
 };
+
+export let pcLogout = (req: Request, res: Response) => {
+  req.logout();
+  res.redirect("/pc");
+};
+
+// =============== Common ====================
 
 export let postLogin = (req: Request, res: Response, next: NextFunction) => {
   req.assert("username", "用户名错误").exists();

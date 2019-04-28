@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 用户信息
+
+  form.form-horizontal(action='/pc/worker', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    if worker.username !== 'admin'
+      .form-group
+        label.col-sm-3.control-label(for='username') 用户名
+        .col-sm-7
+          input.form-control(type='text', name='username', id='username', value=worker.username)
+    .form-group
+      label.col-sm-3.control-label(for='name') 姓名
+      .col-sm-7
+        input.form-control(type='text', name='name', id='name', value=worker.name)
+    .form-group
+      label.col-sm-3.control-label(for='phone') 电话
+      .col-sm-7
+        input.form-control(type='text', name='phone', id='phone', value=worker.name)
+    .form-group
+      .col-sm-offset-3.col-sm-4
+        button.btn.btn.btn-primary(type='submit')
+          i.fa.fa-pencil
+          | 更新
+
+  .page-header
+    h3 修改密码
+
+  form.form-horizontal(action='/pc/worker/password', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='password') 新密码
+      .col-sm-7
+        input.form-control(type='password', name='password', id='password')
+    .form-group
+      label.col-sm-3.control-label(for='confirmPassword') 再输入一次
+      .col-sm-7
+        input.form-control(type='password', name='confirmPassword', id='confirmPassword')
+    .form-group
+      .col-sm-offset-3.col-sm-4
+        button.btn.btn-primary(type='submit')
+          i.fa.fa-lock
+          | 修改密码
+

@@ -6,13 +6,13 @@ import { Request, Response, NextFunction } from "express";
 
 const LocalStrategy = passportLocal.Strategy;
 
-passport.serializeUser<any, any>((user, done) => {
-  done(undefined, user.id);
+passport.serializeUser<any, any>((worker, done) => {
+  done(undefined, worker.id);
 });
 
 passport.deserializeUser((id, done) => {
-  Worker.findById(id, (err, user) => {
-    done(err, user);
+  Worker.findById(id, (err, worker) => {
+    done(err, worker);
   });
 });
 
@@ -41,4 +41,14 @@ export let isAuthenticated = (req: Request, res: Response, next: NextFunction) =
   }
   const platform = req.path.split("/").slice(1, 2)[0];
   res.redirect(`/${platform}/login`);
+};
+
+/**
+ * Admin Required middleware.
+ */
+export let isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated() && req.user.username === "admin") {
+    return next();
+  }
+  req.flash("errors", "需要管理员权限");
 };

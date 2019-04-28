@@ -11,6 +11,8 @@ export type WorkerModel = mongoose.Document & {
   username: string,
   // 密码，用于系统登录
   password: string,
+  // 是否属于就业局
+  isBureau: boolean,
   comparePassword: comparePasswordFunction
 };
 
@@ -26,7 +28,8 @@ const workerSchema = new mongoose.Schema({
   name: String,
   phone: String,
   username: {type: String, unique: true},
-  password: String
+  password: String,
+  isBureau: Boolean
 }, { timestamps: true });
 
 workerSchema.pre("save", function save(next) {

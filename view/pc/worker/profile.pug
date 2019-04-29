@@ -6,7 +6,7 @@ block content
 
   form.form-horizontal(action='/pc/worker', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
-    if worker.username !== 'admin'
+    if worker && worker.username !== 'admin'
       .form-group
         label.col-sm-3.control-label(for='username') 用户名
         .col-sm-7

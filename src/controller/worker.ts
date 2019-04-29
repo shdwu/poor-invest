@@ -12,7 +12,7 @@ export let getWorker = (req: Request, res: Response) => {
 // 获取用户信息
 export let getWorkerList = (req: Request, res: Response) => {
   const page = req.params.page || 0;
-  Worker.find({ ussername: { $ne : "admin" }  }, null, {skip: 10 * page, limit: 10}, (err, workers: WorkerModel[]) => {
+  Worker.find({ username: { $ne : "admin" }  }, null, {skip: 10 * page, limit: 10}, (err, workers: WorkerModel[]) => {
     if (err) { return req.flash("errors", err); }
     Worker.find({ ussername: { $ne : "admin" }  }).count((err, num) => {
       if (err) { return req.flash("errors", err); }
@@ -30,7 +30,7 @@ export let getWorkerList = (req: Request, res: Response) => {
 export let postAddWorker = (req: Request, res: Response, next: NextFunction) => {
   req.assert("username", "用户名不能为空").exists();
   req.assert("password", "登录密码不能为空").exists();
-  req.assert("isBureau", "请选择是否是就业局用户").exists().isBoolean();
+  req.assert("isBureau", "请选择是否是就业局用户").isBoolean();
 
   const errors = req.validationErrors();
 
@@ -54,6 +54,7 @@ export let postAddWorker = (req: Request, res: Response, next: NextFunction) => 
     }
     worker.save((err) => {
       if (err) { return next(err); }
+      return res.redirect("/pc/worker/list")
     });
   });
 };

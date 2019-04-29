@@ -80,9 +80,6 @@ app.use((req, res, next) => {
     req.path !== "/mobile/login" &&
     req.path !== "/captcha") {
     req.session.returnTo = req.path;
-  } else if (req.user &&
-    req.path == "/account") {
-    req.session.returnTo = req.path;
   }
   next();
 });
@@ -105,10 +102,9 @@ app.get("/pc/worker", passportConfig.isAuthenticated, workerController.getWorker
 app.post("/pc/worker", passportConfig.isAuthenticated, workerController.postWorker);
 app.post("/pc/worker/password", passportConfig.isAuthenticated, workerController.postUpdatePassword);
 // tslint:disable-next-line:max-line-length
-app.get("/pc/worker/list/:page", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getWorkerList);
+app.get(/\/pc\/worker\/[(list)|(add)|(del)]/, passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getWorkerList);
 app.post("/pc/worker/add", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postAddWorker);
-app.get("/pc/worker/del", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);
-app.get("/pc/worker/update", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
-
+app.post("/pc/worker/del", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);
+app.post("/pc/worker/update", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
 
 app.listen(3000);

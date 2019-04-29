@@ -13,7 +13,7 @@
       ul.nav.navbar-nav
         li(class=(title == 'Home') ? 'active' : undefined)
           a(href='/pc') 首页
-        if worker.username == 'admin'
+        if worker && worker.username == 'admin'
           li(class=(title == 'Worker List') ? 'active' : undefined)
             a(href='/pc/worker/list') 用户管理
         li(class=(title == 'Contact') ? 'active' : undefined)

@@ -1,24 +1,24 @@
 import * as express from "express";
+import * as path from "path";
+// API keys and Passport configuration
+import * as passportConfig from "./config/passport";
+import * as captchaController from "./controllers/captcha";
+import * as homeController from "./controllers/home";
+// controller
+import * as loginController from "./controllers/login";
+import * as workerController from "./controllers/worker";
+import Worker from "./models/worker";
+import logger from "./util/logger";
+import { ADMIN_PASSWORD, MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 import passport = require("passport");
 import expressValidator = require("express-validator");
-import * as path from "path";
 import mongoose = require("mongoose");
 import bluebird = require("bluebird");
 import flash = require("express-flash");
 import session = require("express-session");
 import bodyParser = require("body-parser");
-import { MONGODB_URI, SESSION_SECRET, ADMIN_PASSWORD } from "./util/secrets";
-import logger from "./util/logger";
-import Worker from "./model/worker";
 
-// controller
-import * as loginController from "./controller/login";
-import * as captchaController from "./controller/captcha";
-import * as homeController from "./controller/home";
-import * as workerController from "./controller/worker";
 
-// API keys and Passport configuration
-import * as passportConfig from "./config/passport";
 
 logger.info("贫困人员就业调查系统启动");
 
@@ -83,28 +83,19 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.set("views", path.join(__dirname, "../view"));
-app.set("view engine", "pug");
+// app.set("views", path.join(__dirname, "../view"));
+// app.set("view engine", "pug");
 
-// 通用路由
+// 路由
 app.get("/captcha", captchaController.getCaptcha);
-// 移动端路由
-app.get("/mobile/", passportConfig.isAuthenticated, homeController.mobileIndex);
-app.get("/mobile/login", loginController.mobileLogin);
-app.get("/mobile/logout", loginController.mobileLogout);
-app.post("/mobile/login", loginController.postLogin);
-// pc端路由
-app.get("/pc/", passportConfig.isAuthenticated, homeController.pcIndex);
-app.get("/pc/login", loginController.pcLogin);
-app.get("/pc/logout", loginController.pcLogout);
-app.post("/pc/login", loginController.postLogin);
+app.post("/login", loginController.postLogin);
 app.get("/pc/worker", passportConfig.isAuthenticated, workerController.getWorker);
 app.post("/pc/worker", passportConfig.isAuthenticated, workerController.postWorker);
 app.post("/pc/worker/password", passportConfig.isAuthenticated, workerController.postUpdatePassword);
 // tslint:disable-next-line:max-line-length
-app.get(/\/pc\/worker\/[(list)|(add)|(del)]/, passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getWorkerList);
 app.post("/pc/worker/add", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postAddWorker);
 app.post("/pc/worker/del", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);
+// tslint:disable-next-line: max-line-length
 app.post("/pc/worker/update", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
 
 app.listen(3000);

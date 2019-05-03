@@ -1,5 +1,13 @@
 import * as express from "express";
 import * as path from "path";
+import { ADMIN_PASSWORD, MONGODB_URI, SESSION_SECRET } from "./util/secrets";
+import passport = require("passport");
+import expressValidator = require("express-validator");
+import mongoose = require("mongoose");
+import bluebird = require("bluebird");
+import session = require("express-session");
+import bodyParser = require("body-parser");
+
 // API keys and Passport configuration
 import * as passportConfig from "./config/passport";
 import * as captchaController from "./controllers/captcha";
@@ -9,14 +17,6 @@ import * as loginController from "./controllers/login";
 import * as workerController from "./controllers/worker";
 import Worker from "./models/worker";
 import logger from "./util/logger";
-import { ADMIN_PASSWORD, MONGODB_URI, SESSION_SECRET } from "./util/secrets";
-import passport = require("passport");
-import expressValidator = require("express-validator");
-import mongoose = require("mongoose");
-import bluebird = require("bluebird");
-import flash = require("express-flash");
-import session = require("express-session");
-import bodyParser = require("body-parser");
 
 
 
@@ -60,14 +60,10 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 // 返回格式转换
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// 设置静态资源路径
-app.use(
-  express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
-);
+
 // 设置当前用户
 app.use((req, res, next) => {
   res.locals.worker = req.user;
@@ -76,19 +72,16 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user &&
-    req.path !== "/pc/login" &&
-    req.path !== "/mobile/login" &&
-    req.path !== "/captcha") {
-    req.session.returnTo = req.path;
+    req.path !== "/postLogin" &&
+    req.path !== "/getCaptcha") {
+    return res.status(401).json({errors: { msg: "请登陆"}});
   }
   next();
 });
-// app.set("views", path.join(__dirname, "../view"));
-// app.set("view engine", "pug");
 
 // 路由
-app.get("/captcha", captchaController.getCaptcha);
-app.post("/login", loginController.postLogin);
+app.get("/getCaptcha", captchaController.getCaptcha);
+app.post("/postLogin", loginController.postLogin);
 app.get("/pc/worker", passportConfig.isAuthenticated, workerController.getWorker);
 app.post("/pc/worker", passportConfig.isAuthenticated, workerController.postWorker);
 app.post("/pc/worker/password", passportConfig.isAuthenticated, workerController.postUpdatePassword);

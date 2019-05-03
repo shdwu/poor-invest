@@ -25,7 +25,8 @@ module.exports = {
       ]
     },
     proxy: {
-      '/captcha': 'http://localhost:3000'
+      '/getCaptcha': 'http://localhost:3000',
+      '/postLogin': 'http://localhost:3000'
     },
     port: 3001
   },

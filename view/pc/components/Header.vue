@@ -8,37 +8,51 @@
         span.navbar-toggler-icon
       .collapse.navbar-collapse
         ul.navbar-nav.mr-auto
-          li.nav-item(:class="[title == 'home' ? active : '']")
+          li.nav-item(:class="{active: title == 'home'}")
             router-link.nav-link(to='home') 首页
-          li.nav-item(v-if="worker && worker.username == 'admin'" :class="[title == 'workers'] ? 'active' : ''")
-            router-link.nav-link(to='worker') 用户管理
-          li.nav-item(:class="[title == 'contact' ? 'active': '']")
+          li.nav-item(v-if="worker && worker.username == 'admin'" :class="{active: title == 'workers'}")
+            router-link.nav-link(to='workers') 用户管理
+          li.nav-item(:class="{active: title == 'contact'}")
             router-link.nav-link(to='contact') 联系我们
         ul.navbar-nav.navbar-right
-          li.nav-item(v-if="!worker" :class="[title == 'login' ? 'active' : '']")
+          li.nav-item(v-if="!worker" :class="{active: title == 'login'}")
             router-link.nav-link(to='login') 登录
           li.nav-item.dropdown(v-else)
             a.nav-link.dropdown-toggle(href='#', data-toggle='dropdown')
               span(style="text-transform: none") {{worker.username}}
               i.caret
-            ul.dropdown-menu
-              li
-                a(href='/pc/worker') 设置
-              li.divider
-              li
-                a(href='/pc/logout') 退出
+            .dropdown-menu
+              router-link.dropdown-item(to='profile') 设置
+              a.dropdown-item(href='#' @click='logout') 退出
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       title: 'login',
-      worker: undefined
+      worker: localStorage.worker? JSON.parse(localStorage.worker): false
+    }
+  },
+  created() {
+    this.$bus.on('changeWorker', this.changeWorker)
+  },
+  methods: {
+    logout: function() {
+      axios.get('/logout').then(() => {
+        localStorage.removeItem("worker")
+        this.$bus.emit('changeWorker')
+        this.$router.go('login')
+      })
+    },
+    changeWorker: function(worker) {
+      this.worker = worker;
     }
   },
   watch: {
-    "$route": (to, from) => {
+    "$route": function(to, from) {
       this.title = to.name
     }
   }

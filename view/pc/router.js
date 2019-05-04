@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 // 路由组件
 import Home from "./router/Home.vue";
 import Login from "./router/Login.vue";
+import Profile from "./router/Profile.vue";
+import Workers from "./router/Workers.vue";
 
 const routes = [
   {
@@ -13,7 +15,16 @@ const routes = [
   {
     path: "/home",
     name: "home",
-    componest: Home
+    component: Home
+  },{
+    path: "/profile",
+    name: "profile",
+    component: Profile
+  },
+  {
+    path: "/workers",
+    name: "workers",
+    component: Workers
   },
   {
     path: "/",
@@ -28,8 +39,8 @@ var router =  new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(!sessionStorage.user && to.name != "login") {
-    next({name: "login"})
+  if(!localStorage.worker && to.name !== "login") {
+    return next({name: "login"})
   }
   next();
 })

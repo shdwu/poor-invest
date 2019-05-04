@@ -26,7 +26,11 @@ module.exports = {
     },
     proxy: {
       '/getCaptcha': 'http://localhost:3000',
-      '/postLogin': 'http://localhost:3000'
+      '/postLogin': 'http://localhost:3000',
+      '/postUpdate': 'http://localhost:3000',
+      '/postUpdatePassword': 'http://localhost:3000',
+      '/logout': 'http://localhost:3000',
+      '/workers': 'http://localhost:3000'
     },
     port: 3001
   },

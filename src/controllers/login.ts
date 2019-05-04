@@ -10,12 +10,13 @@ import message from "../util/message";
 
 export let logout = (req: Request, res: Response) => {
   req.logout();
-  res.redirect("/pc");
+  res.send();
 };
 
 export let postLogin = (req: Request, res: Response) => {
   if (req.user) {
-    return res.send();
+    // tslint:disable-next-line:max-line-length
+    return res.json({username: req.user.username, name: req.user.name, phone: req.user.phone, isBureau: req.user.isBureau});
   }
   req.assert("username", "用户名错误").exists();
   req.assert("password", "密码错误").exists();
@@ -40,7 +41,7 @@ export let postLogin = (req: Request, res: Response) => {
     }
     req.logIn(worker, (err) => {
       if (err) { return res.status(400).json(message("errors", err)); }
-      res.json(message("errors", "登陆成功"));
+      res.json({username: worker.username, name: worker.name, phone: worker.phone, isBureau: worker.isBureau});
     });
   })(req, res);
 };

@@ -23,3 +23,11 @@ $fa-font-path: "~font-awesome/fonts";
 .fa {
     margin-right: 6px;
 }
+
+.page-header {
+    margin: 1.5rem 0;
+
+    & > h4 {
+        font-size: 20px
+    }
+}

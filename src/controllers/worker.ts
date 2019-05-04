@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { WriteError } from "mongodb";
 import { default as Worker, WorkerModel } from "../models/worker";
+import message from "../util/message";
 
 // 获取用户信息
 export let getWorker = (req: Request, res: Response) => {
@@ -13,11 +14,10 @@ export let getWorker = (req: Request, res: Response) => {
 export let getWorkerList = (req: Request, res: Response) => {
   const page = req.params.page || 0;
   Worker.find({ username: { $ne : "admin" }  }, null, {skip: 10 * page, limit: 10}, (err, workers: WorkerModel[]) => {
-    if (err) { return req.flash("errors", err); }
+    if (err) { return res.json(message("errors", err)); }
     Worker.find({ ussername: { $ne : "admin" }  }).count((err, num) => {
-      if (err) { return req.flash("errors", err); }
-      res.render("pc/worker/list", {
-        title: "Worker List",
+      if (err) { return res.json(message("errors", err));}
+      res.json({
         workers,
         page,
         num
@@ -103,10 +103,12 @@ export let postUpdateWorker = (req: Request, res: Response, next: NextFunction) 
 };
 
 // 更新用户信息
-export let postWorker = (req: Request, res: Response, next: NextFunction) => {
+export let postUpdate = (req: Request, res: Response) => {
 
   Worker.findById(req.user.id, (err, worker: WorkerModel) => {
-    if (err) { return next(err); }
+    if (err) {
+      return res.json(message("errors", err));
+    }
     worker.name = req.body.name || "";
     worker.phone = req.body.phone || "";
     if (req.body.username) {
@@ -115,27 +117,24 @@ export let postWorker = (req: Request, res: Response, next: NextFunction) => {
     worker.save((err: WriteError) => {
       if (err) {
         if (err.code === 11000) {
-          req.flash("errors", { msg: "username已存在" });
-          return res.redirect("/pc/worker");
+          return res.json(message("errors", "用户名已存在"));
         }
-        return next(err);
+        return res.json(message("errors", err.errmsg));
       }
-      req.flash("success", { msg: "用户信息更新成功" });
-      res.redirect("/pc/worker");
+      return res.json({username: worker.username, name: worker.name, phone: worker.phone, isBureau: worker.isBureau});
     });
   });
 };
 
 // 更新密码
 export let postUpdatePassword = (req: Request, res: Response, next: NextFunction) => {
-  req.assert("password", "密码应至少4位").len({ min: 6 });
+  req.assert("password", "密码应至少6位").len({ min: 6 });
   req.assert("confirmPassword", "两次输入的密码不匹配").equals(req.body.password);
 
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash("errors", errors);
-    return res.redirect("/pc/worker");
+    return res.status(400).json({errors});
   }
 
   Worker.findById(req.user.id, (err, worker: WorkerModel) => {
@@ -143,8 +142,7 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
     worker.password = req.body.password;
     worker.save((err: WriteError) => {
       if (err) { return next(err); }
-      req.flash("success", { msg: "密码更新成功" });
-      res.redirect("/pc/worker");
+      res.json(message("success", "密码更新成功"));
     });
   });
 };

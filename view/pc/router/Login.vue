@@ -31,7 +31,6 @@
 
 <script>
 import axios from 'axios';
-import { error } from 'util';
 
 export default {
   data() {
@@ -43,12 +42,24 @@ export default {
   },
   methods: {
     doLogin: function(event) {
+      if(!this.username || !this.password) {
+        this.$bus.emit('errors', [{msg: "用户名密码错误"}]);
+        return;
+      }
+      if(!this.code) {
+        this.$bus.emit('errors', [{msg: "验证码不能为空"}]);
+        return;
+      }
       axios.post('/postLogin', {
         username: this.username,
         password: this.password,
         code: this.code
+      }).then((response) => {
+        localStorage.worker = JSON.stringify(response.data);
+        this.$bus.emit('changeWorker', response.data);
+        this.$router.push({name: 'home'});
       }).catch(err => {
-        this.$bus.emit('errors', err)
+        this.$bus.emit('errors', err.response.data.errors)
       })
     }
   }

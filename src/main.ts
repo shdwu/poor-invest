@@ -82,9 +82,11 @@ app.use((req, res, next) => {
 // 路由
 app.get("/getCaptcha", captchaController.getCaptcha);
 app.post("/postLogin", loginController.postLogin);
-app.get("/pc/worker", passportConfig.isAuthenticated, workerController.getWorker);
-app.post("/pc/worker", passportConfig.isAuthenticated, workerController.postWorker);
-app.post("/pc/worker/password", passportConfig.isAuthenticated, workerController.postUpdatePassword);
+app.post("/postUpdate", passportConfig.isAuthenticated, workerController.postUpdate);
+app.get("/logout", loginController.logout);
+app.get("/workers", passportConfig.isAuthenticated, workerController.getWorkerList);
+
+app.post("/postUpdatePassword", passportConfig.isAuthenticated, workerController.postUpdatePassword);
 // tslint:disable-next-line:max-line-length
 app.post("/pc/worker/add", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postAddWorker);
 app.post("/pc/worker/del", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);

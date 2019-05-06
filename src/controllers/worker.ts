@@ -14,9 +14,9 @@ export let getWorker = (req: Request, res: Response) => {
 export let getWorkerList = (req: Request, res: Response) => {
   const page = req.params.page || 0;
   Worker.find({ username: { $ne : "admin" }  }, null, {skip: 10 * page, limit: 10}, (err, workers: WorkerModel[]) => {
-    if (err) { return res.json(message("errors", err)); }
+    if (err) { return res.json(err); }
     Worker.find({ ussername: { $ne : "admin" }  }).count((err, num) => {
-      if (err) { return res.json(message("errors", err));}
+      if (err) { return res.json(err);}
       res.json({
         workers,
         page,
@@ -35,8 +35,7 @@ export let postAddWorker = (req: Request, res: Response, next: NextFunction) => 
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash("errors", errors);
-    return res.redirect("/pc/worker/list");
+    return res.status(400).json(errors.pop().msg);
   }
   const worker = new Worker({
     username: req.body.username,
@@ -49,12 +48,11 @@ export let postAddWorker = (req: Request, res: Response, next: NextFunction) => 
   Worker.findOne({username: req.body.username}, (err, existingWorker) => {
     if (err) { return next(err); }
     if (existingWorker) {
-      req.flash("errors", "用户名已存在");
-      return res.redirect("/pc/worker/list");
+      return res.status(400).json("用户名已存在");
     }
     worker.save((err) => {
-      if (err) { return next(err); }
-      return res.redirect("/pc/worker/list");
+      if (err) { return res.status(400).json(err);}
+      return res.json("新增用户成功");
     });
   });
 };
@@ -62,8 +60,10 @@ export let postAddWorker = (req: Request, res: Response, next: NextFunction) => 
 // Admin删除用户
 export let getDelWorker = (req: Request, res: Response) => {
   Worker.deleteOne({ id: req.params.id}, (err) => {
-    if (err) { req.flash("errors", "删除用户失败"); }
-    return res.redirect("/pc/worker/list");
+    if (err) { 
+      return res.status(400).json("删除用户失败"); 
+    }
+    return res.json("删除用户成功");
   });
 };
 
@@ -76,11 +76,10 @@ export let postUpdateWorker = (req: Request, res: Response, next: NextFunction) 
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash("errors", errors);
-    return res.redirect("/pc/worker/list");
+    return res.status(400).json(errors.pop().msg);
   }
 
-  Worker.findById(req.body.id, (err, worker: WorkerModel) => {
+  Worker.findByIdAndUpdate(req.body.id, req.body,(err, worker: WorkerModel) => {
     if (err) { return next(err); }
     worker.name = req.body.name || "";
     worker.phone = req.body.phone || "";
@@ -88,17 +87,8 @@ export let postUpdateWorker = (req: Request, res: Response, next: NextFunction) 
     worker.username = req.body.username;
     worker.isBureau = req.body.isBureau;
 
-    worker.save((err: WriteError) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash("errors", { msg: "username已存在" });
-          return res.redirect("/pc/worker/list");
-        }
-        return next(err);
-      }
-      req.flash("success", { msg: "用户信息更新成功" });
-      res.redirect("/pc/worker/list");
-    });
+    return res.json("更新用户成功");
+
   });
 };
 
@@ -107,7 +97,7 @@ export let postUpdate = (req: Request, res: Response) => {
 
   Worker.findById(req.user.id, (err, worker: WorkerModel) => {
     if (err) {
-      return res.json(message("errors", err));
+      return res.send(err);
     }
     worker.name = req.body.name || "";
     worker.phone = req.body.phone || "";
@@ -116,10 +106,7 @@ export let postUpdate = (req: Request, res: Response) => {
     }
     worker.save((err: WriteError) => {
       if (err) {
-        if (err.code === 11000) {
-          return res.json(message("errors", "用户名已存在"));
-        }
-        return res.json(message("errors", err.errmsg));
+        return res.status(400).send(err.errmsg);
       }
       return res.json({username: worker.username, name: worker.name, phone: worker.phone, isBureau: worker.isBureau});
     });
@@ -134,7 +121,7 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
   const errors = req.validationErrors();
 
   if (errors) {
-    return res.status(400).json({errors});
+    return res.status(400).json(errors.pop().msg);
   }
 
   Worker.findById(req.user.id, (err, worker: WorkerModel) => {
@@ -142,7 +129,7 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
     worker.password = req.body.password;
     worker.save((err: WriteError) => {
       if (err) { return next(err); }
-      res.json(message("success", "密码更新成功"));
+      res.send("密码更新成功");
     });
   });
 };

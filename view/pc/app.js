@@ -7,11 +7,16 @@ import "./scss/app.scss";
 import "bootstrap/dist/js/bootstrap.js"
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import store from "./store.js";
 
 Vue.use(VueBus);
 Vue.use(VueRouter);
 Vue.use(ElementUI);
-new Vue({
+
+const vue = new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount("#app");
+
+export default vue;

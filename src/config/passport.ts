@@ -3,6 +3,7 @@ import request = require("request");
 import passportLocal = require("passport-local");
 import Worker from "../models/worker";
 import { Request, Response, NextFunction } from "express";
+import message from "../util/message";
 
 const LocalStrategy = passportLocal.Strategy;
 
@@ -50,5 +51,5 @@ export let isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated() && req.user.username === "admin") {
     return next();
   }
-  req.flash("errors", "需要管理员权限");
+  res.json("需要管理员权限");
 };

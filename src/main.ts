@@ -7,6 +7,8 @@ import mongoose = require("mongoose");
 import bluebird = require("bluebird");
 import session = require("express-session");
 import bodyParser = require("body-parser");
+import * as multer from "multer";
+import * as xlsx from "node-xlsx";
 
 // API keys and Passport configuration
 import * as passportConfig from "./config/passport";
@@ -15,14 +17,17 @@ import * as homeController from "./controllers/home";
 // controller
 import * as loginController from "./controllers/login";
 import * as workerController from "./controllers/worker";
+import * as excelController from "./controllers/excel";
 import Worker from "./models/worker";
 import logger from "./util/logger";
-
 
 
 logger.info("贫困人员就业调查系统启动");
 
 const app = express();
+// 指定上传文件目录
+const storage = multer.memoryStorage()
+const upload = multer({ dest: 'uploads/', storage: storage })
 
 // Connect to MongoDB
 const mongoUrl = MONGODB_URI;
@@ -74,23 +79,22 @@ app.use((req, res, next) => {
   if (!req.user &&
     req.path !== "/postLogin" &&
     req.path !== "/getCaptcha") {
-    return res.status(401).json({errors: { msg: "请登陆"}});
+    return res.status(401).json("请登陆");
   }
   next();
 });
 
 // 路由
+app.get("/current", loginController.current)
 app.get("/getCaptcha", captchaController.getCaptcha);
 app.post("/postLogin", loginController.postLogin);
 app.post("/postUpdate", passportConfig.isAuthenticated, workerController.postUpdate);
 app.get("/logout", loginController.logout);
-app.get("/workers", passportConfig.isAuthenticated, workerController.getWorkerList);
+app.get("/workers", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getWorkerList);
+app.post("/postAddWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postAddWorker);
+app.get("/delWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);
+app.post("/updateWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
+app.post("/enterDb", passportConfig.isAuthenticated, excelController.enterDb)
 
-app.post("/postUpdatePassword", passportConfig.isAuthenticated, workerController.postUpdatePassword);
-// tslint:disable-next-line:max-line-length
-app.post("/pc/worker/add", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postAddWorker);
-app.post("/pc/worker/del", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);
-// tslint:disable-next-line: max-line-length
-app.post("/pc/worker/update", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
-
+app.post('/excel/upload', upload.single('excel'), excelController.parseExcel)
 app.listen(3000);

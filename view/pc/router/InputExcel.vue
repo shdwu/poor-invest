@@ -2,10 +2,10 @@
   div.container
     .page-header
       h4 用户列表
-      el-upload(class="upload-demo" action="/excel/upload" name="excel" :on-success="handleRet")
+      el-upload(class="upload-demo" action="/excel/upload" name="excel" :on-success="handleRet" :on-error="errorHandler")
         el-button(size="small" type="primary") 点击上传解析
       hr
-      el-button(size="medium" type="primary" style="float: right; margin: 20px") 入库
+      el-button(size="medium" type="primary" style="float: right; margin: 20px" @click="enterDb") 入库
     el-table(:data="poorCells" stripe style="width: 100%")
       el-table-column(type="index" width="50")
       el-table-column(label="贫困户基本信息")
@@ -33,7 +33,7 @@
       el-table-column(fixed="right" label="操作" width="100")
         template(slot-scope="scope")
           el-button(@click="delPoorCell(scope.$index)" type="text" size="small") 删除
-          el-button(@click="updatePoorCell(scope.$index, scope.row)" type="text" size="small") 编辑
+          el-button(@click="updatePoorCell1(scope.$index, scope.row)" type="text" size="small") 编辑
     el-dialog(title="编辑贫困人员信息" :visible.sync="dialogFormVisible")
       el-form(:model="editPoorCell" label-width="80px" size="mini" label-position="right")
         h4 贫困户基本信息
@@ -110,10 +110,13 @@
               el-input(v-model="editPoorCell.helpPerson.phone")
       .dialog-footer(slot="footer")
         el-button(@click="dialogFormVisible = false") 取消
-        el-button(@click="dialogFormVisible = false") 确定
+        el-button(v-if="!isUpdate" @click="updatePoorCell2") 确定
 </template>
 
 <script>
+import axios from "axios";
+import errorHandler from "../util/errorHandler.js";
+
 export default {
   data() {
     return {
@@ -130,12 +133,24 @@ export default {
     handleRet(res) {
       this.poorCells = res;
     },
+    errorHandler,
     delPoorCell(index) {
       if(index >= 0)
         this.poorCells.splice(index, 1);
     },
-    updatePoorCell(poorCell) {
+    updatePoorCell1(index, poorCell) {
       this.dialogFormVisible = true;
+      this.editPoorCell = poorCell;
+      this.editPoorCell.index = index;
+    },
+    updatePoorCell2() {
+      this.poorCells[this.editPoorCell.index] = this.editPoorCell;
+      this.dialogFormVisible = false;
+    },
+    enterDb() {
+      axios.post("/enterDb", this.poorCells).then(()=> {
+        this.$message("入库成功")
+      }).catch(errorHandler)
     }
   }
 }

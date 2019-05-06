@@ -28,20 +28,24 @@ export let postLogin = (req: Request, res: Response) => {
     return false;
   });
 
-  const errors = req.validationErrors();
+  const errors: Record<string, any> | any[] = req.validationErrors();
 
   if (errors) {
-    return res.status(400).json({errors});
+    return res.status(400).json(errors.pop().msg);
   }
 
   passport.authenticate("local", (err: Error, worker: WorkerModel, info: IVerifyOptions) => {
-    if (err) { return res.status(400).json({errors: err}); }
+    if (err) { return res.status(400).json(err); }
     if (!worker) {
-      return res.status(400).json(message("errors", "用户名密码错误"));
+      return res.status(400).json("用户名密码错误");
     }
     req.logIn(worker, (err) => {
-      if (err) { return res.status(400).json(message("errors", err)); }
+      if (err) { return res.status(400).json(err); }
       res.json({username: worker.username, name: worker.name, phone: worker.phone, isBureau: worker.isBureau});
     });
   })(req, res);
 };
+
+export let current = (req: Request, res: Response) => {
+  return res.json(req.user);
+}

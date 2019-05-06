@@ -30,7 +30,13 @@ module.exports = {
       '/postUpdate': 'http://localhost:3000',
       '/postUpdatePassword': 'http://localhost:3000',
       '/logout': 'http://localhost:3000',
-      '/workers': 'http://localhost:3000'
+      '/workers': 'http://localhost:3000',
+      '/postAddWorker': 'http://localhost:3000',
+      '/delWorker': 'http://localhost:3000',
+      '/updateWorker': 'http://localhost:3000',
+      '/current': 'http://localhost:3000',
+      '/enterDb': 'http://localhost:3000',
+      '/excel/upload': 'http://localhost:3000'
     },
     port: 3001
   },

@@ -18,7 +18,7 @@
         .col-sm-4(style="padding-top: 12px")
           input.form-control(type='text' v-model='code' placeholder='验证码' required)
         .col-sm-3
-          img(src="/getCaptcha" class="img-fluid" alt="验证码")
+          img#captcha-img(src="/getCaptcha" class="img-fluid" alt="验证码")
       .form-group.row
         .offset-sm-3.col-sm-7
           button.col-sm-3.btn.btn-primary(type="button" @click = "doLogin")
@@ -43,11 +43,11 @@ export default {
   methods: {
     doLogin: function(event) {
       if(!this.username || !this.password) {
-        this.$bus.emit('errors', [{msg: "用户名密码错误"}]);
+        this.$message('用户名密码错误');
         return;
       }
       if(!this.code) {
-        this.$bus.emit('errors', [{msg: "验证码不能为空"}]);
+        this.$message('验证码不能为空');
         return;
       }
       axios.post('/postLogin', {
@@ -56,10 +56,11 @@ export default {
         code: this.code
       }).then((response) => {
         localStorage.worker = JSON.stringify(response.data);
-        this.$bus.emit('changeWorker', response.data);
+        this.$store.commit('setWorker', response.data);
         this.$router.push({name: 'home'});
       }).catch(err => {
-        this.$bus.emit('errors', err.response.data.errors)
+        document.getElementById("captcha-img").src = "/getCaptcha?" + Math.random();
+        this.$message(err.response.data);
       })
     }
   }

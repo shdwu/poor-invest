@@ -12,8 +12,8 @@
             router-link.nav-link(to='home') 首页
           li.nav-item(v-if="worker && worker.username == 'admin'" :class="{active: title == 'workers'}")
             router-link.nav-link(to='workers') 用户管理
-          li.nav-item(:class="{active: title == 'contact'}")
-            router-link.nav-link(to='contact') 联系我们
+          li.nav-item(:class="{active: title == 'excel'}")
+            router-link.nav-link(to='excel') Excel导入
         ul.navbar-nav.navbar-right
           li.nav-item(v-if="!worker" :class="{active: title == 'login'}")
             router-link.nav-link(to='login') 登录
@@ -32,28 +32,22 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      title: 'login',
-      worker: localStorage.worker? JSON.parse(localStorage.worker): false
     }
   },
-  created() {
-    this.$bus.on('changeWorker', this.changeWorker)
+  computed: {
+    title: function() {
+      return this.$store.state.title
+    },
+    worker: function() {
+      return this.$store.state.worker
+    }
   },
   methods: {
     logout: function() {
       axios.get('/logout').then(() => {
-        localStorage.removeItem("worker")
-        this.$bus.emit('changeWorker')
+        this.$store.commit("setWorker", false);
         this.$router.go('login')
       })
-    },
-    changeWorker: function(worker) {
-      this.worker = worker;
-    }
-  },
-  watch: {
-    "$route": function(to, from) {
-      this.title = to.name
     }
   }
 }

@@ -11,7 +11,7 @@
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\" ",
     "build-vue": "webpack --config webpack.config.js",
     "watch-vue": "webpack --watch --config webpack.config.js",
-    "debug-vue": "webpack-dev-server --open"
+    "debug-vue": "webpack-dev-server --host 0.0.0.0 --open"
   },
   "nodemonConfig": {
     "ignore": [

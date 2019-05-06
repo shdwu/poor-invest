@@ -36,6 +36,7 @@ module.exports = {
       '/updateWorker': 'http://localhost:3000',
       '/current': 'http://localhost:3000',
       '/enterDb': 'http://localhost:3000',
+      '/poorCells': 'http://localhost:3000',
       '/excel/upload': 'http://localhost:3000'
     },
     port: 3001
@@ -99,6 +100,17 @@ module.exports = {
       inject: 'body'
     })
   ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+            name: "commons",
+            chunks: "initial",
+            minChunks: 2
+        }
+      }
+    }
+  },
   watchOptions: {
     ignored: ['node_modules']
   }

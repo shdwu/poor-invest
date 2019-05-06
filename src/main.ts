@@ -18,6 +18,7 @@ import * as homeController from "./controllers/home";
 import * as loginController from "./controllers/login";
 import * as workerController from "./controllers/worker";
 import * as excelController from "./controllers/excel";
+import * as poorCellController from "./controllers/poorCell";
 import Worker from "./models/worker";
 import logger from "./util/logger";
 
@@ -94,7 +95,7 @@ app.get("/workers", passportConfig.isAuthenticated, passportConfig.isAdmin, work
 app.post("/postAddWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postAddWorker);
 app.get("/delWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.getDelWorker);
 app.post("/updateWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
-app.post("/enterDb", passportConfig.isAuthenticated, excelController.enterDb)
-
-app.post('/excel/upload', upload.single('excel'), excelController.parseExcel)
+app.post("/enterDb", passportConfig.isAuthenticated, excelController.enterDb);
+app.post('/excel/upload', upload.single('excel'), excelController.parseExcel);
+app.get("/poorCells", passportConfig.isAuthenticated, poorCellController.getPoorCells)
 app.listen(3000);

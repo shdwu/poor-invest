@@ -2,10 +2,7 @@
   div.container
     .page-header
       h4 用户列表
-      el-upload(class="upload-demo" action="/excel/upload" name="excel" :on-success="handleRet")
-        el-button(size="small" type="primary") 点击上传解析
       hr
-      el-button(size="medium" type="primary" style="float: right; margin: 20px") 入库
     el-table(:data="poorCells" stripe style="width: 100%")
       el-table-column(type="index" width="50")
       el-table-column(label="贫困户基本信息")
@@ -114,6 +111,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import errorHandler from "../util/errorHandler.js";
+
 export default {
   data() {
     return {
@@ -126,16 +126,16 @@ export default {
       dialogFormVisible: false
     }
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getPoorCells();
+    })
+  },
   methods: {
-    handleRet(res) {
-      this.poorCells = res;
-    },
-    delPoorCell(index) {
-      if(index >= 0)
-        this.poorCells.splice(index, 1);
-    },
-    updatePoorCell(poorCell) {
-      this.dialogFormVisible = true;
+    getPoorCells() {
+      axios.get("/poorCells").then((res) => {
+        this.poorCells = res.data.poorCells;
+      }).catch(errorHandler);
     }
   }
 }

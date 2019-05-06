@@ -65,7 +65,7 @@ export default {
       }).catch(errorHandler)
     },
     addWorker: function(worker) {
-      axios.post("/postAddOrUpdateWorker", {
+      axios.post("/postAddWorker", {
         username: this.editWorker.username,
         password: this.editWorker.password,
         isBureau: this.editWorker.isBureau,
@@ -73,6 +73,7 @@ export default {
         phone: this.editWorker.phone
       }).then((res) => {
         this.$message(res.data)
+        this.getWorkers();
         this.editWorker = {}
         this.dialogFormVisible = false
       }).catch(errorHandler);

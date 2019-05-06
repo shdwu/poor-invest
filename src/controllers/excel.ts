@@ -47,10 +47,14 @@ export let parseExcel = (req: Request, res: Response) => {
 };
 
 export let enterDb = (req: Request, res: Response) => {
+  let errs: any[] = [];
   req.body.forEach((v: any) => {
-    v.save((err: any) => {
-      if (err) { return res.status(400).json(err);}
-      return res.json("新增用户成功");
+    new PoorCell(v).save((err: any) => {
+      if (err) { errs.push(err)}
     });
+    if(errs) {
+      return res.json(errs.pop());
+    }
+    return res.json("入库成功");
   })
 }

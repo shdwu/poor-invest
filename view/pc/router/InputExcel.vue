@@ -110,7 +110,7 @@
               el-input(v-model="editPoorCell.helpPerson.phone")
       .dialog-footer(slot="footer")
         el-button(@click="dialogFormVisible = false") 取消
-        el-button(v-if="!isUpdate" @click="updatePoorCell2") 确定
+        el-button(@click="updatePoorCell2") 确定
 </template>
 
 <script>
@@ -150,6 +150,7 @@ export default {
     enterDb() {
       axios.post("/enterDb", this.poorCells).then(()=> {
         this.$message("入库成功")
+        this.poorCells = [];
       }).catch(errorHandler)
     }
   }

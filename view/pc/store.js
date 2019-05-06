@@ -20,9 +20,13 @@ const store = new Vuex.Store({
   actions: {
     getWorkerAsync() {
       setInterval(() => {
-        axios.get("/current",(res) => {
-          localStorage.worker = res.data;
+        axios.get("/current").then((res) => {
+          localStorage.worker = JSON.stringify(res.data);
           store.commit('setWorker', res.data);
+        }).catch((err) => {
+          if(err.response.state == 401) {
+            localStorage.worker = false;
+          }
         })
       }, 10000)
     }

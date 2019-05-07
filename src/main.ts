@@ -22,7 +22,6 @@ import * as poorCellController from "./controllers/poorCell";
 import Worker from "./models/worker";
 import logger from "./util/logger";
 
-
 logger.info("贫困人员就业调查系统启动");
 
 const app = express();

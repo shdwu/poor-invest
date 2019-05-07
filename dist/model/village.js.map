@@ -1,1 +1,0 @@
-{"version":3,"file":"village.js","sourceRoot":"","sources":["../../src/model/village.ts"],"names":[],"mappings":";;AAAA,qCAAqC;AAUrC,MAAM,aAAa,GAAG,IAAI,QAAQ,CAAC,MAAM,CAAC;IACxC,IAAI,EAAE,MAAM;IACZ,UAAU,EAAE,MAAM;CACnB,EAAE,EAAE,UAAU,EAAE,IAAI,EAAE,CAAC,CAAC;AAEzB,MAAM,OAAO,GAAG,QAAQ,CAAC,KAAK,CAAC,SAAS,EAAE,aAAa,CAAC,CAAC;AACzD,kBAAe,OAAO,CAAC"}

@@ -2,7 +2,7 @@
   .container
     .page-header
       h4 用户列表
-      el-button.btn.btn-primary(type="button" style="float: right; margin-top: 19px" @click="dialogFormVisible = true")
+      el-button.btn.btn-primary(type="button" style="float: right; margin-top: 19px" @click="dialogFormVisible = true;editWorker={};isUpdate=false")
         i.fa.fa-plus-circle
         | 新增工作人员
       hr      

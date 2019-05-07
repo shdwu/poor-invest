@@ -1,5 +1,7 @@
 import VueRouter from "vue-router";
 import store from "./store.js"
+import axios from "axios";
+
 
 // 路由组件
 import Home from "./router/Home.vue";
@@ -48,12 +50,10 @@ var router =  new VueRouter({
 router.beforeEach((to, from, next) => {
   if(!store.state.worker && to.name !== 'login') {
     return next({name: "login"})
+  }else {
+    store.commit("setTitle", to.name);
+    next();
   }
-  if(store.state.worker && to.name == 'login') {
-    return next({name: "home"})
-  }
-  store.commit("setTitle", to.name);
-  next();
 })
 
 

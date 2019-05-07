@@ -15,6 +15,12 @@ module.exports = {
     publicPath: '/',
     filename:'[name]/js/main-[hash:8].js'
   },
+  externals: {
+    'vue': 'Vue',
+    'vuex': 'Vuex',
+    'vue-router': 'VueRouter',
+    'element-ui': 'ELEMENT',
+  },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: "dist-front",
@@ -37,7 +43,8 @@ module.exports = {
       '/current': 'http://localhost:3000',
       '/enterDb': 'http://localhost:3000',
       '/poorCells': 'http://localhost:3000',
-      '/excel/upload': 'http://localhost:3000'
+      '/excel/upload': 'http://localhost:3000',
+      '/delPoorCell': 'http://localhost:3000'
     },
     port: 3001
   },
@@ -100,17 +107,6 @@ module.exports = {
       inject: 'body'
     })
   ],
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-            name: "commons",
-            chunks: "initial",
-            minChunks: 2
-        }
-      }
-    }
-  },
   watchOptions: {
     ignored: ['node_modules']
   }

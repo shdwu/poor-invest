@@ -15,7 +15,7 @@ export let getWorkerList = (req: Request, res: Response) => {
   const page = req.params.page || 0;
   Worker.find({ username: { $ne : "admin" }  }, null, {skip: 10 * page, limit: 10}, (err, workers: WorkerModel[]) => {
     if (err) { return res.json(err); }
-    Worker.find({ ussername: { $ne : "admin" }  }).count((err, num) => {
+    Worker.find({ username: { $ne : "admin" }  }).count((err, num) => {
       if (err) { return res.json(err);}
       res.json({
         workers,
@@ -59,7 +59,7 @@ export let postAddWorker = (req: Request, res: Response, next: NextFunction) => 
 
 // Admin删除用户
 export let getDelWorker = (req: Request, res: Response) => {
-  Worker.deleteOne({ id: req.params.id}, (err) => {
+  Worker.deleteOne({ _id: req.query.id}, (err) => {
     if (err) { 
       return res.status(400).json("删除用户失败"); 
     }

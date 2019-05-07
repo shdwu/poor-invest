@@ -97,5 +97,6 @@ app.get("/delWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, wo
 app.post("/updateWorker", passportConfig.isAuthenticated, passportConfig.isAdmin, workerController.postUpdateWorker);
 app.post("/enterDb", passportConfig.isAuthenticated, excelController.enterDb);
 app.post('/excel/upload', upload.single('excel'), excelController.parseExcel);
-app.get("/poorCells", passportConfig.isAuthenticated, poorCellController.getPoorCells)
+app.get("/poorCells", passportConfig.isAuthenticated, poorCellController.getPoorCells);
+app.get("/delPoorCell", passportConfig.isAuthenticated, poorCellController.delPoorCell);
 app.listen(3000);

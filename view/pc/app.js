@@ -6,12 +6,13 @@ import router from "./router.js";
 import "./scss/app.scss";
 import "bootstrap/dist/js/bootstrap.js"
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 import store from "./store.js";
+
 
 Vue.use(VueBus);
 Vue.use(VueRouter);
 Vue.use(ElementUI);
+
 
 const vue = new Vue({
   router,

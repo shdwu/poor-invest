@@ -16,7 +16,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "dist/public/**/*"
+      "dist-back/config/*.json"
     ],
     "delay": "2500"
   },
@@ -54,7 +54,6 @@
     "@babel/core": "^7.4.4",
     "@babel/plugin-syntax-jsx": "^7.2.0",
     "@babel/preset-env": "^7.4.4",
-    "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/runtime": "^7.4.4",
     "@types/bcrypt-nodejs": "0.0.30",
     "@types/bluebird": "^3.5.26",

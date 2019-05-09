@@ -6,7 +6,7 @@
         el-button(type="primary" style="margin: 10px" @click="updateAddr") 保存
       el-collapse-item(title="就业情况选项设置")
         el-tag(:key="jobStateType" v-for="jobStateType in jobStateTypes" closable :disable-transitions="false" @close="handleClose(tag)") {{jobStateType}}
-        el-input.input-new-tag(v-model="newJobStateType" v-if="inputVisible" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm")
+        el-input.input-new-tag(v-model="newJobStateType" v-if="inputVisible" size="small" ref="saveTagInput" @keyup.enter.native="handleInputConfirm")
         el-button.button-new-tag(v-else size="small" @click="showInput") + 新增就业情况
 </template>
 
@@ -17,6 +17,9 @@ import errorHandler from "../util/errorHandler.js";
 export default {
   data() {
     return {
+      jobStateTypes: [],
+      newJobStateType: "",
+      inputVisible: false,
       activeName: "",
       adds: []
     }
@@ -24,9 +27,37 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getAdds();
+      vm.getJobStateTypes();
     })
   },
   methods: {
+    getJobStateTypes() {
+      axios.get("/getJobStateType").then((res) => {
+        this.jobStateTypes = res.data
+      })
+    },
+    handleClose(tag) {
+      this.jobStateTypes.splice(this.jobStateTypes.indexOf(tag), 1);
+      axios.post("/postJobStateType", { jobStateTypes: this.jobStateTypes }).then(() => {
+      }).catch(errorHandler);
+    },
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.focus();
+      });
+    },
+    handleInputConfirm() {
+      let inputValue = this.newJobStateType;
+      this.newJobStateType = "";
+      if (inputValue) {
+        this.jobStateTypes.push(inputValue);
+        axios.post("/postJobStateType", { jobStateTypes: this.jobStateTypes }).then(() => {
+        }).catch(errorHandler);
+      }
+      this.inputVisible = false;
+      this.inputValue = '';
+    },
     getAdds() {
       axios.get("/getAdds").then((res) => {
         this.adds = res.data

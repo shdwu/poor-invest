@@ -46,6 +46,8 @@ module.exports = {
       '/excel/upload': 'http://localhost:3000',
       '/getAdds': 'http://localhost:3000',
       '/updateAddr': 'http://localhost:3000',
+      '/getJobStateType': 'http://localhost:3000',
+      '/postJobStateType': 'http://localhost:3000',
       '/delPoorCell': 'http://localhost:3000'
     },
     port: 3001

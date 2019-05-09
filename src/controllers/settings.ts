@@ -14,3 +14,16 @@ export let updateAdds = (req: Request, res: Response) => {
 export let getAdds = (req: Request, res: Response) => {
   res.sendFile(path.resolve(__dirname, "../config/adds.json"));
 }
+
+export let postJobStateType = (req: Request, res: Response) => {
+  if(req.body.jobStateTypes) {
+    let json = JSON.stringify(req.body.jobStateTypes);
+    fs.writeFile(path.resolve(__dirname, "../config/jobState.json"), json, "utf8", ()=> {
+      res.json("更新成功");
+    })
+  }
+}
+
+export let getJobStateType = (req: Request, res: Response) => {
+  res.sendFile(path.resolve(__dirname, "../config/jobState.json"));
+}

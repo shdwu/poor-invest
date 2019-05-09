@@ -19,7 +19,7 @@ import * as loginController from "./controllers/login";
 import * as workerController from "./controllers/worker";
 import * as excelController from "./controllers/excel";
 import * as poorCellController from "./controllers/poorCell";
-import * as addrController from "./controllers/adds";
+import * as settingsController from "./controllers/settings";
 import Worker from "./models/worker";
 import logger from "./util/logger";
 
@@ -99,6 +99,8 @@ app.post("/enterDb", passportConfig.isAuthenticated, excelController.enterDb);
 app.post('/excel/upload', upload.single('excel'), excelController.parseExcel);
 app.get("/poorCells", passportConfig.isAuthenticated, poorCellController.getPoorCells);
 app.get("/delPoorCell", passportConfig.isAuthenticated, poorCellController.delPoorCell);
-app.post("/updateAddr", passportConfig.isAdmin, addrController.updateAdds);
-app.get("/getAdds", passportConfig.isAdmin, addrController.getAdds);
+app.post("/updateAddr", passportConfig.isAdmin, settingsController.updateAdds);
+app.get("/getAdds", passportConfig.isAdmin, settingsController.getAdds);
+app.post("/postJobStateType", passportConfig.isAdmin, settingsController.postJobStateType);
+app.get("/getJobStateType", passportConfig.isAdmin, settingsController.getJobStateType)
 app.listen(3000);

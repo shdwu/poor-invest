@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && tslint -c tslint.json -p tsconfig.json",
-    "debug": "npm run build && npm run watch-debug",
+    "build": "tsc && npm run copy-static-assets && tslint -c tslint.json -p tsconfig.json",
+    "debug": "npm run build && npm run copy-static-assets && npm run watch-debug",
     "serve-debug": "nodemon --inspect dist-back/main.js",
     "watch-ts": "tsc -w",
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\" ",
     "build-vue": "webpack -p --config webpack.prod.config.js",
     "watch-vue": "webpack --watch --config webpack.dev.config.js",
-    "debug-vue": "webpack-dev-server --open --config webpack.dev.config.js"
+    "debug-vue": "webpack-dev-server --open --config webpack.dev.config.js",
+    "copy-static-assets": "ts-node copyStaticAssets.ts"
   },
   "nodemonConfig": {
     "ignore": [
@@ -22,7 +23,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
     "axios": "^0.18.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.3",
@@ -52,9 +52,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-syntax-jsx": "^7.2.0",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@babel/runtime": "^7.4.4",
     "@types/bcrypt-nodejs": "0.0.30",
     "@types/bluebird": "^3.5.26",
     "@types/body-parser": "^1.17.0",
@@ -70,6 +71,9 @@
     "@types/passport-local": "^1.0.33",
     "@types/request": "^2.48.1",
     "@types/shelljs": "^0.8.5",
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+    "@vue/babel-plugin-transform-vue-jsx": "^1.0.0",
+    "@vue/babel-preset-jsx": "^1.0.0",
     "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.5",
     "clean-webpack-plugin": "^2.0.1",

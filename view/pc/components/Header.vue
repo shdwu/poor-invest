@@ -10,10 +10,12 @@
         ul.navbar-nav.mr-auto
           li.nav-item(:class="{active: title == 'home'}")
             router-link.nav-link(to='home') 首页
-          li.nav-item(v-if="worker && worker.username == 'admin'" :class="{active: title == 'workers'}")
-            router-link.nav-link(to='workers') 用户管理
           li.nav-item(:class="{active: title == 'excel'}")
             router-link.nav-link(to='excel') Excel导入
+          li.nav-item(v-if="worker && worker.username == 'admin'" :class="{active: title == 'workers'}")
+            router-link.nav-link(to='workers') 用户管理
+          li.nav-item(v-if="worker && worker.username == 'admin'" :class="{active: title == 'settings'}")
+            router-link.nav-link(to="settings") 系统设置
         ul.navbar-nav.navbar-right
           li.nav-item(v-if="!worker" :class="{active: title == 'login'}")
             router-link.nav-link(to='login') 登录

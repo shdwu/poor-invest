@@ -44,6 +44,8 @@ module.exports = {
       '/enterDb': 'http://localhost:3000',
       '/poorCells': 'http://localhost:3000',
       '/excel/upload': 'http://localhost:3000',
+      '/getAdds': 'http://localhost:3000',
+      '/updateAddr': 'http://localhost:3000',
       '/delPoorCell': 'http://localhost:3000'
     },
     port: 3001
@@ -53,6 +55,11 @@ module.exports = {
       {
         test: /\.vue$/,
         use: 'vue-loader'
+      },
+      {
+        test: /\.js$/,
+        use: 'babel-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.pug$/,

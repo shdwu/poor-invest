@@ -15,18 +15,34 @@
           el-button(@click="delWorker(scope.row)" type="text" size="small") 删除
           el-button(@click="updateWorker1(scope.row)" type="text" size="small") 编辑
     el-dialog(title="新增工作人员" :visible.sync="dialogFormVisible")
-      el-form(:model = "editWorker")
-        el-form-item(label="用户名" :label-width="formLabelWidth")
-          el-input(v-model="editWorker.username")
-        el-form-item(label="密码" :label-width="formLabelWidth")
-          el-input(v-model="editWorker.password")
-        el-form-item(label="是否为就业局用户" :label-width="formLabelWidth")
+      el-form(:model = "editWorker" size="mini")
+        el-row(:gutter="20")
+          el-col(:span="12")
+            el-form-item(label="用户名" label-width="60px")
+              el-input(v-model="editWorker.username")
+          el-col(:span="12")
+            el-form-item(label="密码" label-width="60px")
+              el-input(v-model="editWorker.password")
+        el-row(:gutter="20")
+          el-col(:span="12")
+            el-form-item(label="姓名" label-width="60px")
+              el-input(v-model="editWorker.name")
+          el-col(:span="12")
+            el-form-item(label="电话" label-width="60px")
+              el-input(v-model="editWorker.phone")
+        el-form-item(label="是否为就业局用户" label-width="130px")
           el-radio(v-model="editWorker.isBureau" :label="false") 否 
           el-radio(v-model="editWorker.isBureau" :label="true") 是
-        el-form-item(label="姓名" :label-width="formLabelWidth")
-          el-input(v-model="editWorker.name")
-        el-form-item(label="电话" :label-width="formLabelWidth")
-          el-input(v-model="editWorker.phone")
+        el-row(:gutter="20" v-if="!editWorker.isBureau")
+          el-col(:span="8")
+            el-select(v-model="adds_1" placeholder="乡镇" size="mini")
+              el-option(v-for="item in options" :key="item.value" :label="item.label" :value="item.value")
+          el-col(:span="8")
+            el-select(v-model="adds_2" placeholder="村社" size="mini")
+              el-option(v-for="item in options" :key="item.value" :label="item.label" :value="item.value")
+          el-col(:span="8")
+            el-input(placeholder="请输入组" v-model="adds_3" size="mini")
+              template(slot="append") 组
       .dialog-footer(slot="footer")
         el-button(@click="dialogFormVisible = false") 取消
         el-button(v-if="!isUpdate" @click="addWorker") 确定
@@ -49,8 +65,7 @@ export default {
         isBureau: "",
         name: "",
         phone: ""
-      },
-      formLabelWidth: "130px"
+      }
     }
   },
   beforeRouteEnter(to, from, next) {

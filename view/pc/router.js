@@ -1,7 +1,5 @@
 import VueRouter from "vue-router";
 import store from "./store.js"
-import axios from "axios";
-
 
 // 路由组件
 import Home from "./router/Home.vue";
@@ -9,6 +7,7 @@ import Login from "./router/Login.vue";
 import Profile from "./router/Profile.vue";
 import Workers from "./router/Workers.vue";
 import InputExcel from "./router/InputExcel.vue";
+import Settings from "./router/Settings.vue";
 
 const routes = [
   {
@@ -34,6 +33,11 @@ const routes = [
     path: "/excel",
     name: "excel",
     component: InputExcel
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: Settings
   },
   {
     path: "/",

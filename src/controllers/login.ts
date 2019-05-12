@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import logger from "../util/logger";
 import * as crypto from "crypto";
 import passport = require("passport");
-import { default as Worker, WorkerModel} from "../models/worker";
+import { default as User, UserModel} from "../models/user";
 import request = require("request");
 import { IVerifyOptions } from "passport-local";
 import "../config/passport";
@@ -34,18 +34,18 @@ export let postLogin = (req: Request, res: Response) => {
     return res.status(400).json(errors.pop().msg);
   }
 
-  passport.authenticate("local", (err: Error, worker: WorkerModel, info: IVerifyOptions) => {
+  passport.authenticate("local", (err: Error, user: UserModel, info: IVerifyOptions) => {
     if (err) { return res.status(400).json(err); }
-    if (!worker) {
+    if (!user) {
       return res.status(400).json("用户名密码错误");
     }
-    req.logIn(worker, (err) => {
+    req.logIn(user, (err) => {
       if (err) { return res.status(400).json(err); }
-      res.json({username: worker.username, name: worker.name, phone: worker.phone, isBureau: worker.isBureau});
+      res.json({username: user.username, name: user.name, phone: user.phone, isBureau: user.isBureau});
     });
   })(req, res);
 };
 
 export let current = (req: Request, res: Response) => {
   return res.json(req.user);
-}
+};

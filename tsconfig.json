@@ -6,7 +6,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
-        "outDir": "dist-back"
+        "outDir": "dist"
     },
     "include": [
         "src/**/*"

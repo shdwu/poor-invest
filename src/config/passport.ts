@@ -1,7 +1,7 @@
 import passport = require("passport");
 import request = require("request");
 import passportLocal = require("passport-local");
-import Worker from "../models/worker";
+import User from "../models/user";
 import { Request, Response, NextFunction } from "express";
 import message from "../util/message";
 
@@ -12,13 +12,13 @@ passport.serializeUser<any, any>((worker, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  Worker.findById(id, (err, worker) => {
+  User.findById(id, (err, worker) => {
     done(err, worker);
   });
 });
 
 passport.use(new LocalStrategy({ usernameField: "username" }, (username, password, done) => {
-  Worker.findOne({ username }, (err, worker: any) => {
+  User.findOne({ username }, (err, worker: any) => {
     if (err) { return done(err); }
     if (!worker) {
       return done(undefined, false, { message: `${username} 不存在` });

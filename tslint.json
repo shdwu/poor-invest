@@ -20,6 +20,9 @@
     "no-consecutive-blank-lines": false,
     "arrow-parens": false,
     "trailing-comma": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "align": true,
+    "quotemark": [true, "single"],
+    "no-shadowed-variable": false
   }
 }

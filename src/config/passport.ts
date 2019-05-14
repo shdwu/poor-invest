@@ -1,24 +1,26 @@
-import passport = require("passport");
-import request = require("request");
-import passportLocal = require("passport-local");
-import User from "../models/user";
-import { Request, Response, NextFunction } from "express";
-import message from "../util/message";
+import passport = require('passport');
+import request = require('request');
+import passportLocal = require('passport-local');
+import User from '../user/user.interface';
+import userModel from '../user/user.model';
+import { Request, Response, NextFunction } from 'express';
+import HttpException from '../exceptions/HttpException';
 
 const LocalStrategy = passportLocal.Strategy;
 
-passport.serializeUser<any, any>((worker, done) => {
-  done(undefined, worker.id);
+passport.serializeUser<any, any>((user, done) => {
+  done(undefined, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, worker) => {
-    done(err, worker);
+  userModel.findById(id, (err: any, user: User) => {
+    user.password = undefined;
+    done(err, user);
   });
 });
 
-passport.use(new LocalStrategy({ usernameField: "username" }, (username, password, done) => {
-  User.findOne({ username }, (err, worker: any) => {
+passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
+  userModel.findOne({ username }, (err: any, worker: any) => {
     if (err) { return done(err); }
     if (!worker) {
       return done(undefined, false, { message: `${username} 不存在` });
@@ -28,7 +30,7 @@ passport.use(new LocalStrategy({ usernameField: "username" }, (username, passwor
       if (isMatch) {
         return done(undefined, worker);
       }
-      return done(undefined, false, { message: "用户名密码错误" });
+      return done(undefined, false, { message: '用户名密码错误' });
     });
   });
 }));
@@ -40,16 +42,15 @@ export let isAuthenticated = (req: Request, res: Response, next: NextFunction) =
   if (req.isAuthenticated()) {
     return next();
   }
-  const platform = req.path.split("/").slice(1, 2)[0];
-  res.redirect(`/${platform}/login`);
+  next(new HttpException(401, '请登陆'));
 };
 
 /**
  * Admin Required middleware.
  */
 export let isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated() && req.user.username === "admin") {
+  if (req.isAuthenticated() && req.user.username === 'admin') {
     return next();
   }
-  res.json("需要管理员权限");
+  next(new HttpException(401, '权限不足'));
 };

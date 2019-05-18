@@ -76,7 +76,7 @@ class App {
         });
         user.save().then(() => {
           logger.info('初始化Admin完成');
-        }).catch( err => {
+        }).catch( (err: any) => {
           if (err) {
             logger.error(err);
             process.exit(1);

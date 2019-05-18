@@ -81,9 +81,9 @@ class UserController implements Controller {
   private createUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const userData: User = req.body;
     const createUser = new this.user(userData);
-    createUser.save().then(user => {
+    createUser.save().then((user: User) => {
       res.send(user);
-    }).catch(err => {
+    }).catch((err: any) => {
       next(new HttpException(400, err));
     });
   }

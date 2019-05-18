@@ -24,7 +24,7 @@ passport.use(new LocalStrategy({ usernameField: 'username' }, (username, passwor
     if (!user) {
       return done(undefined, false, { message: `${username} 不存在` });
     }
-    user.comparePassword(password, (err, isMatch) => {
+    user.comparePassword(password, (err: any, isMatch: boolean) => {
       if (err) { return done(err); }
       if (isMatch) {
         return done(undefined, user);

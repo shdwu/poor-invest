@@ -12,6 +12,7 @@ import errorMiddleware from './middleware/error.middleware';
 import userModel from './user/user.model';
 import * as compression from 'compression';
 import * as lusca from 'lusca';
+import 'reflect-metadata';
 
 class App {
   public app: express.Application;

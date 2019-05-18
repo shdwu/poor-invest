@@ -1,7 +1,7 @@
-import * as bcrypt from 'bcrypt-nodejs';
-import * as mongoose from 'mongoose';
 import Town from '../town/town.interface';
 import Village from '../village/village.interface';
+import * as bcrypt from 'bcrypt-nodejs';
+import * as mongoose from 'mongoose';
 
 interface User {
   _id: string;
@@ -20,7 +20,7 @@ interface User {
   comparePassword: comparePasswordFunction;
 }
 
-type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
+export type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => void) => void;
 
 const comparePassword: comparePasswordFunction = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err: mongoose.Error, isMatch: boolean) => {

@@ -20,18 +20,19 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
-  userModel.findOne({ username }, (err: any, worker: any) => {
-    if (err) { return done(err); }
-    if (!worker) {
+  userModel.findOne({ username }).then(user => {
+    if (!user) {
       return done(undefined, false, { message: `${username} 不存在` });
     }
-    worker.comparePassword(password, (err: Error, isMatch: boolean) => {
+    user.comparePassword(password, (err, isMatch) => {
       if (err) { return done(err); }
       if (isMatch) {
-        return done(undefined, worker);
+        return done(undefined, user);
       }
       return done(undefined, false, { message: '用户名密码错误' });
     });
+  }).catch(err => {
+    return done(err);
   });
 }));
 

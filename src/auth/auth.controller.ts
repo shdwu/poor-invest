@@ -23,7 +23,7 @@ class AuthController implements Controller {
     this.router.post(`${this.path}/login`, validationMiddleware(PostLoginDto), this.login);
     this.router.get(`${this.path}/logout`,  isAuthenticated, this.logout);
     this.router.get(`${this.path}/current`, isAuthenticated, this.current);
-    this.router.get(`${this.path}/captcha`, isAuthenticated, this.captcha);
+    this.router.get(`${this.path}/captcha`, this.captcha);
   }
 
   private captcha(req: express.Request, res: express.Response) {
@@ -52,19 +52,20 @@ class AuthController implements Controller {
       return res.send(req.user);
     }
 
-    if (req.query.code) {
-      return req.query.code.toUpperCase() === req.session.captcha.toUpperCase();
+    if ( !req.session.captcha || req.body.code.toUpperCase() !== req.session.captcha.toUpperCase()) {
+      next(new HttpException(400, '验证码错误'));
     }
 
     passport.authenticate('local', (err: Error, user: User, info: IVerifyOptions) => {
       if (err) { next(new HttpException(400, err.message)); }
       if (!user) {
         next(new HttpException(400, '用户名密码错误'));
+      } else {
+        req.logIn(user, (err) => {
+          if (err) { next(new HttpException(400, err.message)); }
+          res.send(req.user);
+        });
       }
-      req.logIn(user, (err) => {
-        if (err) { next(new HttpException(400, err.message)); }
-        res.send(req.user);
-      });
     })(req, res);
   }
 }

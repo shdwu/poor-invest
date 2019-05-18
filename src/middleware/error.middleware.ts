@@ -5,10 +5,7 @@ function errorMiddleware(error: any, request: Request, response: Response, next:
   const message = error.message || '系统内部错误，请联系管理员';
   response
     .status(status)
-    .send({
-      status,
-      message,
-    });
+    .send(message);
 }
 
 export default errorMiddleware;

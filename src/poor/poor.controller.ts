@@ -21,8 +21,9 @@ class PoorController implements Controller {
     this.router.delete(`${this.path}/:id`, this.delPoor);
   }
 
-  private getPoors(req: express.Request, res: express.Response, next: express.NextFunction) {
-    this.poor.find().then(poors => {
+  private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const page = req.params.page || 0;
+    this.poor.find().limit(10).skip((page + 1) * 10).then(poors => {
       res.send(poors);
     }).catch(next);
   }

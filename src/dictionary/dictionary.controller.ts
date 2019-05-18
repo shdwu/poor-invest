@@ -16,19 +16,19 @@ class DictionaryController implements Controller {
   }
 
   private initializeRouters() {
-    this.router.get(`${this.path}/:name`, this.getDict);
+    this.router.get(`${this.path}/:key`, this.getDict);
     this.router.post(`${this.path}`, validationMiddleware(AddDictDto), this.addDict);
-    this.router.post(`${this.path}/del`, this.delDict);
+    this.router.delete(`${this.path}`, validationMiddleware(AddDictDto), this.delDict);
   }
 
-  private getDict(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private getDict = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const key = req.params.key;
     this.dict.find({key}).then( values => {
       res.send(values);
     }).catch(next);
   }
 
-  private addDict(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private addDict = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const dictData: Dictionary  = req.body;
     const createDict = new this.dict(dictData);
     createDict.save().then(dict => {
@@ -38,7 +38,7 @@ class DictionaryController implements Controller {
     });
   }
 
-  private delDict(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private delDict = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const dictData: Dictionary  = req.body;
     this.dict.findOneAndDelete(dictData).then( success => {
       if (success) {

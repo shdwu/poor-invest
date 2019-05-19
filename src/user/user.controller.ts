@@ -19,7 +19,7 @@ class UserController implements Controller {
   private initializeRoutes() {
     this.router.get(this.path, this.getAllUser);
     this.router.get(`${this.path}/:id`, this.getUserById);
-    this.router.put(`${this.path}/:id`, validationMiddleware(CreateUserDto, true), this.modifyUser);
+    this.router.post(`${this.path}/:id`, validationMiddleware(CreateUserDto, true), this.updateUser);
     this.router.delete(`${this.path}/:id`, this.deleteUser);
     this.router.post(this.path, validationMiddleware(CreateUserDto), this.createUser);
     this.router.post(`${this.path}/update-password`, this.updatePassword);
@@ -48,8 +48,8 @@ class UserController implements Controller {
   }
 
   // 查询用户列表
-  private getAllUser(req: express.Request, res: express.Response, next: express.NextFunction) {
-    this.user.find().then(users => {
+  private getAllUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.user.find({}, '-password').then(users => {
       res.send(users);
     }).catch(err => {
       next(new HttpException(400, err));
@@ -58,14 +58,14 @@ class UserController implements Controller {
 
   private getUserById = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
-    this.user.findById(id).then(user => {
+    this.user.findById(id, '-password').then(user => {
       res.send(user);
     }).catch(err => {
       next(new HttpException(400, err));
     });
   }
 
-  private modifyUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private updateUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     let id = req.params.id;
     if (id === 'current') {
       id = req.user.id;

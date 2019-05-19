@@ -22,20 +22,24 @@ class PoorController implements Controller {
   }
 
   private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const page = req.params.page || 0;
-    this.poor.find().limit(10).skip((page + 1) * 10).then(poors => {
+    const page = req.params.page || 1;
+    let query;
+    if ( req.user.town ) {
+      query =  { town:  req.user.town};
+    }
+    this.poor.find(query).limit(10).skip((page - 1) * 10).populate('town').populate('village').then(poors => {
       res.send(poors);
     }).catch(next);
   }
 
-  private getPoorById(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private getPoorById = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
     this.poor.findById(id).then(poor => {
       res.send(poor);
     }).catch(next);
   }
 
-  private addPoor(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private addPoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const poorData = req.body;
     const createPoor = new this.poor(poorData);
     createPoor.save().then(poor => {
@@ -43,7 +47,7 @@ class PoorController implements Controller {
     }).catch(next);
   }
 
-  private updatePoor(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private updatePoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
     const poor = req.body;
     this.poor.findByIdAndUpdate(id, poor).then(poor => {
@@ -51,7 +55,7 @@ class PoorController implements Controller {
     }).catch(next);
   }
 
-  private delPoor(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private delPoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
     this.poor.findByIdAndDelete(id).then(success => {
       if (success) {

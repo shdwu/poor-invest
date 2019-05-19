@@ -39,6 +39,6 @@ const comparePassword: comparePasswordFunction = function(candidatePassword, cb)
 
 userSchema.methods.comparePassword = comparePassword;
 
-const userModel = mongoose.models.User || mongoose.model<User & mongoose.Document>('User', userSchema);
+const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
 
 export default userModel;

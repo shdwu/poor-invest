@@ -19,6 +19,7 @@ class DictionaryController implements Controller {
     this.router.get(`${this.path}/:key`, this.getDict);
     this.router.post(`${this.path}`, validationMiddleware(AddDictDto), this.addDict);
     this.router.delete(`${this.path}`, validationMiddleware(AddDictDto), this.delDict);
+    this.router.get(`${this.path}/relation/:id`, this.getRelation);
   }
 
   private getDict = (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -49,6 +50,13 @@ class DictionaryController implements Controller {
     }).catch(err => {
       next(new HttpException(400, err));
     });
+  }
+
+  private getRelation = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const id = req.params.id;
+    this.dict.findById(id).populate('relation').then( values => {
+      res.send(values);
+    }).catch(next);
   }
 }
 

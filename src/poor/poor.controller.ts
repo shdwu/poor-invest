@@ -15,6 +15,7 @@ class PoorController implements Controller {
 
   private initializeRouters() {
     this.router.get(this.path, this.getPoors);
+    this.router.get(`${this.path}/search`, this.searchPoors);
     this.router.get(`${this.path}/:id`, this.getPoorById);
     this.router.post(`${this.path}`, validateMiddleware(CreatePoorDto), this.addPoor);
     this.router.post(`${this.path}/:id`, this.updatePoor);
@@ -32,9 +33,22 @@ class PoorController implements Controller {
     }).catch(next);
   }
 
+  private searchPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const search = req.query.search;
+    const reg = new RegExp(search, 'i');
+    let query;
+    if ( req.user.town ) {
+      query =  { town:  req.user.town};
+    }
+    this.poor.find(query).or([{ name: {$regex: reg}}, { phone: {$regex: reg}}, { userCode: {$regex: reg}}])
+    .populate('town').populate('village').then(poors => {
+      res.send(poors);
+    }).catch(next);
+  }
+
   private getPoorById = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
-    this.poor.findById(id).then(poor => {
+    this.poor.findById(id).populate('town').populate('village').then(poor => {
       res.send(poor);
     }).catch(next);
   }

@@ -62,7 +62,7 @@ class AuthController implements Controller {
         next(new HttpException(400, '用户名密码错误'));
       } else {
         req.logIn(user, (err) => {
-          if (err) { next(new HttpException(400, err.message)); }
+          if (err) { return next(new HttpException(400, err.message)); }
           res.send(req.user);
         });
       }

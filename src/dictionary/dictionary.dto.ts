@@ -1,4 +1,4 @@
-import { IsString, IsBoolean } from 'class-validator';
+import { IsString } from 'class-validator';
 
 class AddDictDto {
   @IsString()

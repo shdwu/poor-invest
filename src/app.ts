@@ -51,6 +51,7 @@ class App {
     this.app.use(lusca.xssProtection(true));
     this.app.use((req, res, next) => {
       res.locals.user = req.user;
+      res.header('Cache-Control', 'no-store');
       next();
     });
     this.app.use(authMiddleware);

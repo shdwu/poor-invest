@@ -18,7 +18,7 @@ class DictionaryController implements Controller {
   private initializeRouters() {
     this.router.get(`${this.path}/:key`, this.getDict);
     this.router.post(`${this.path}`, validationMiddleware(AddDictDto), this.addDict);
-    this.router.delete(`${this.path}`, validationMiddleware(AddDictDto), this.delDict);
+    this.router.delete(`${this.path}`, this.delDict);
     this.router.get(`${this.path}/relation/:id`, this.getRelation);
   }
 
@@ -41,7 +41,7 @@ class DictionaryController implements Controller {
 
   private delDict = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const dictData: Dictionary  = req.body;
-    this.dict.findOneAndDelete(dictData).then( success => {
+    this.dict.findOneAndDelete(dictData._id).then( success => {
       if (success) {
         res.send(200);
       } else {

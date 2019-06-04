@@ -8,12 +8,14 @@ function getTown() {
 }
 
 function updateTown() {
-  townsCache = {};
-  townModel.find().populate('villages').then(towns => {
-    towns.forEach(v => {
-      townsCache[v.name] = v;
+  setTimeout(() => {
+    townsCache = {};
+    townModel.find().populate('villages').then(towns => {
+      towns.forEach(v => {
+        townsCache[v.name] = v;
+      });
     });
-  });
+  }, 2000);
 }
 
 

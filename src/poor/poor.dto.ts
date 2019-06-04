@@ -5,9 +5,7 @@ class CreatePoorDto {
   @IsString({message: '姓名不能为空'})
   public name: string;
   // 乡镇
-  @IsString({message: '镇不能为空'})
   public town: string;
-  @IsString({message: '村不能为空'})
   public village: string;
   public team: string;
   public cell: {

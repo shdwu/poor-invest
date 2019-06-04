@@ -23,13 +23,19 @@ class PoorController implements Controller {
   }
 
   private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const page = req.params.page || 1;
-    let query;
+    const page = req.query.page || 1;
+    let query: any;
     if ( req.user.town ) {
       query =  { town:  req.user.town};
     }
-    this.poor.find(query).limit(10).skip((page - 1) * 10).populate('town').populate('village').then(poors => {
-      res.send(poors);
+    this.poor.find(query).count().then(count => {
+      this.poor.find(query).skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
+        res.send({
+          poors,
+          page,
+          count
+        });
+      }).catch(next);
     }).catch(next);
   }
 
@@ -58,7 +64,12 @@ class PoorController implements Controller {
     const createPoor = new this.poor(poorData);
     createPoor.save().then(poor => {
       res.send(poor);
-    }).catch(next);
+    }).catch(e => {
+      if (e.code === 11000) {
+        e.message = `${poorData.name} 该用户已存在`;
+      }
+      return next(e);
+    });
   }
 
   private updatePoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {

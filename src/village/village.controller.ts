@@ -3,6 +3,7 @@ import townModel from '../town/town.model';
 import * as express from 'express';
 import Controller from '../interfaces/controller.interfaces';
 import Village from './village.interface';
+import cache from '../utils/cache';
 
 class VillageController implements Controller {
   public path = '/village';
@@ -25,6 +26,7 @@ class VillageController implements Controller {
     createVillage.save().then((village: Village) => {
       res.send(village);
     }).catch(next);
+    cache.updateTown();
   }
 
   private deleteVillage = (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -36,6 +38,7 @@ class VillageController implements Controller {
         res.send(404);
       }
     }).catch(next);
+    cache.updateTown();
   }
 }
 

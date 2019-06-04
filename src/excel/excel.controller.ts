@@ -23,7 +23,7 @@ class ExcelController implements Controller {
   }
 
   private initializeRouters() {
-    this.router.post(`${this.path}/parse`, this.upload.single('excel'), this.parseExcel);
+    this.router.post(`${this.path}/parse`, this.upload.single('file'), this.parseExcel);
     this.router.post(`${this.path}/enter`, this.enterExcel);
   }
 
@@ -32,7 +32,7 @@ class ExcelController implements Controller {
     this.upload = multer({ dest: 'uploads/', storage });
   }
 
-  private enterExcel(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private enterExcel = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const poors: Poor[] = req.body;
     poors.forEach((v: any) => {
       new this.poor(v).save().then();
@@ -40,54 +40,64 @@ class ExcelController implements Controller {
     res.send(200);
   }
 
-  private parseExcel(req: express.Request, res: express.Response, next: express.NextFunction) {
+  private parseExcel = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const workSheets = xlsx.parse(req.file.buffer);
-    const poors: Poor[] = [];
+    const retInfos: Array<{ poor: Poor, errors: string[] }> = [];
     if (workSheets && workSheets[0]) {
       workSheets[0].data.forEach((v: string[], i) => {
         // 前两行不要
         if (i > 1 && v[3]) {
-          const town: Town = cache.townsCache[v[0].trim()];
+          const retInfo: { poor: Poor, errors: string[] } = {poor: {}, errors: []} as any;
+          const poorData: any = {
+                  team: v[2],
+                  name: v[3],
+                  cell: {
+                    cellCode: v[4],
+                    relationship: v[5]
+                  },
+                  userCode: v[6],
+                  phone: '' + parseInt(v[7], 10),
+                  jobState: v[8],
+                  state: v[9],
+                  isJob: v[10],
+                  jobType: v[11],
+                  workType: v[12],
+                  jobAdd: v[13],
+                  salary: v[14],
+                  train: v[15],
+                  trainItem: v[16],
+                  noJobSeason: v[17],
+                  helpPerson: {
+                    // 姓名
+                    name: v[18],
+                    // 职务
+                    position: v[19],
+                    // 联系电话
+                    phone: v[20]
+                  }
+                };
+          const town: Town = cache.getTown()[v[0]];
+          // 如果没有城镇，记录错误信息
           if (town) {
-            this.village.findOne({town: town._id, name: v[1].trim()}).then(village => {
-              const poor = new this.poor({
-                town: town._id,
-                village:  village || village._id ,
-                team: v[2].trim(),
-                name: v[3].trim(),
-                cell: {
-                  cellCode: v[4].trim(),
-                  relationship: v[5].trim()
-                },
-                userCode: v[6].trim(),
-                phone: parseInt(v[7], 10),
-                jobState: v[8].trim(),
-                state: v[9].trim(),
-                isJob: v[10].trim(),
-                jobType: v[11].trim(),
-                workType: v[12].trim(),
-                jobAdd: v[13].trim(),
-                salary: v[14].trim(),
-                train: v[15].trim(),
-                trainItem: v[16].trim(),
-                noJobSeason: v[17].trim(),
-                helpPerson: {
-                  // 姓名
-                  name: v[18].trim(),
-                  // 职务
-                  position: v[19].trim(),
-                  // 联系电话
-                  phone: v[20].trim()
-                }
-              }).save().then(p => {
-                poors.push(p);
-              });
+            poorData.town = town;
+            town.villages.forEach( village => {
+              if (village.name === (v[1] as string)) {
+                poorData.village = village;
+              }
             });
+            // 如果没有村庄，记录错误信息
+            if (!poorData.village) {
+              retInfo.errors.push(`${v[1]} 该村庄不存在，请先创建村庄`);
+            }
+          } else {
+            retInfo.errors.push(`${v[0]} 该城镇不存在，请先创建城镇`);
           }
+          retInfo.poor = new this.poor(poorData);
+          retInfos.push(retInfo);
         }
       });
     }
-    return res.json(poors);
+    return res.json(retInfos);
   }
 
 }

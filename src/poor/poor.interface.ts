@@ -31,7 +31,7 @@ export default interface Poor {
   // 就业地
   jobAdd: string;
   // 工资
-  salary: number;
+  salary: string;
   // 是否有培训意愿
   train: string;
   // 培训意愿项目

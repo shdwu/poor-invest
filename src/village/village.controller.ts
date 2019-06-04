@@ -24,7 +24,7 @@ class VillageController implements Controller {
     const createVillage = new this.village(villageData);
     createVillage.save().then((village: Village) => {
       res.send(village);
-    }).then(next);
+    }).catch(next);
   }
 
   private deleteVillage = (req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -1,22 +1,15 @@
 import Town from '../town/town.interface';
 import townModel from '../town/town.model';
 
-let townsCache: {[name: string]: Town};
+let townsCache: {[name: string]: Town} = {};
 
-function initializeTown() {
-  townModel.find().then(towns => {
-    towns.forEach(v => {
-      const item: any = {};
-      item.name = v.name;
-      item.value = v;
-      this.towns.push(item);
-    });
-  });
+function getTown() {
+  return townsCache;
 }
 
 function updateTown() {
   townsCache = {};
-  townModel.find().then(towns => {
+  townModel.find().populate('villages').then(towns => {
     towns.forEach(v => {
       townsCache[v.name] = v;
     });
@@ -24,9 +17,9 @@ function updateTown() {
 }
 
 
-initializeTown();
+updateTown();
 
 export default {
-  townsCache,
+  getTown,
   updateTown
 };

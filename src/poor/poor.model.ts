@@ -20,7 +20,7 @@ const poorSchema = new mongoose.Schema({
   jobType: String,
   workType: String,
   jobAdd: String,
-  salary: Number,
+  salary: String,
   train: String,
   trainItem: String,
   noJobSeason: String,

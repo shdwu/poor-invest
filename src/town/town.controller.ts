@@ -2,6 +2,7 @@ import * as express from 'express';
 import Controller from '../interfaces/controller.interfaces';
 import townModel from './town.model';
 import Town from './town.interface';
+import cache from '../utils/cache';
 
 class TownController implements Controller {
   public path = '/town';
@@ -44,7 +45,7 @@ class TownController implements Controller {
     const createTown = new this.town(townData);
     createTown.save().then(town => {
       res.send(town);
-      // cache.updateTown();
+      cache.updateTown();
     }).catch(next);
   }
 
@@ -53,6 +54,7 @@ class TownController implements Controller {
     this.town.findByIdAndDelete(id).then(success => {
       if (success) {
         res.send(200);
+        cache.updateTown();
       } else {
         res.send(404);
       }

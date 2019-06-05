@@ -24,12 +24,21 @@ class PoorController implements Controller {
 
   private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const page = req.query.page || 1;
-    let query: any;
+    delete req.query.page;
+    const search: any = req.query;
     if ( req.user.town ) {
-      query =  { town:  req.user.town};
+      search.town =  req.user.town || search.town;
     }
-    this.poor.find(query).count().then(count => {
-      this.poor.find(query).skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
+    if (req.query.name) {
+      const nameReg = new RegExp(req.query.name, 'i');
+      search.name = nameReg;
+    }
+    if (req.query.userCode) {
+      const cardReg = new RegExp(req.query.userCode, 'i');
+      search.userCode = cardReg;
+    }
+    this.poor.find(search).count().then(count => {
+      this.poor.find(search).skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
         res.send({
           poors,
           page,

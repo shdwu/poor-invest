@@ -13,7 +13,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "dist/config/*.json"
+      "node_modules/"
     ],
     "delay": "2500"
   },

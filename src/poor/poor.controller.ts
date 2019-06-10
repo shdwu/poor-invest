@@ -23,7 +23,8 @@ class PoorController implements Controller {
   }
 
   private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const page = req.query.page || 1;
+    // tslint:disable-next-line: radix
+    const page = parseInt(req.query.page) || 1;
     delete req.query.page;
     const search: any = req.query;
     if ( req.user.town ) {

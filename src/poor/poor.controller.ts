@@ -15,6 +15,7 @@ class PoorController implements Controller {
 
   private initializeRouters() {
     this.router.get(this.path, this.getPoors);
+    this.router.get(`${this.path}/cellers`, this.getCellers);
     this.router.get(`${this.path}/search`, this.searchPoors);
     this.router.get(`${this.path}/:id`, this.getPoorById);
     this.router.post(`${this.path}`, validateMiddleware(CreatePoorDto), this.addPoor);
@@ -46,6 +47,14 @@ class PoorController implements Controller {
           count
         });
       }).catch(next);
+    }).catch(next);
+  }
+
+  private getCellers = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const cellCode = req.query.cellCode;
+    const id = req.query.current;
+    this.poor.find({'_id': {$ne: id}, 'cell.cellCode': cellCode }).then(poors => {
+      res.send(poors);
     }).catch(next);
   }
 

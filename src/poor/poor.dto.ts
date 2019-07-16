@@ -26,6 +26,8 @@ class CreatePoorDto {
   public state: string;
   // 是否就业
   public isJob: string;
+  // 是否有就业意愿
+  public wantJob: string;
   // 就业类型
   public jobType: string;
   // 具体工种
@@ -38,6 +40,8 @@ class CreatePoorDto {
   public train: string;
   // 培训意愿项目
   public trainItem: string;
+  // 培训项目详情
+  public trainDetil: string;
   // 未就业原因
   public noJobSeason: string;
 

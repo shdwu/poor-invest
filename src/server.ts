@@ -6,6 +6,7 @@ import PoorController from './poor/poor.controller';
 import TownController from './town/town.controller';
 import UserController from './user/user.controller';
 import VillageController from './village/village.controller';
+import DemoController from './demo/demo.controller';
 import dotenv = require('dotenv');
 import validateEnv from './utils/validateEnv';
 
@@ -19,7 +20,8 @@ const app = new App([
   new PoorController(),
   new TownController(),
   new UserController(),
-  new VillageController()
+  new VillageController(),
+  new DemoController()
 ]);
 
 app.listen();

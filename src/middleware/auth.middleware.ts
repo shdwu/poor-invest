@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import HttpException from '../exceptions/HttpException';
 
 function authMiddleware(request: Request, response: Response, next: NextFunction) {
+  process.stdout.write(request.path);
   // After successful login, redirect back to the intended page
   if (!request.user &&
     request.path !== '/auth/login' &&

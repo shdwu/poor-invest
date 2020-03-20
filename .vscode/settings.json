@@ -1,8 +1,8 @@
 {
     "editor.codeActionsOnSave": {
-        "source.fixAll.tslint": true
+        "source.fixAll.tslint": true,
+        "source.fixAll.eslint": true
     },
-    "eslint.autoFixOnSave": true,
     "vetur.format.options.useTabs": true,
     "editor.renderControlCharacters": true,
     "editor.tabSize": 2

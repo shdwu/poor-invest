@@ -1,45 +1,43 @@
-import villageModel from './village.model';
-import townModel from '../town/town.model';
-import * as express from 'express';
-import Controller from '../interfaces/controller.interfaces';
-import Village from './village.interface';
-import cache from '../utils/cache';
+import * as express from 'express'
+import Controller from '../interfaces/controller.interfaces'
+import cache from '../utils/cache'
+import Village from './village.interface'
+import villageModel from './village.model'
 
 class VillageController implements Controller {
-  public path = '/village';
-  public router = express.Router();
-  private village = villageModel;
-  private town = townModel;
+  public path = '/village'
+  public router = express.Router()
+  private village = villageModel
 
   constructor() {
-    this.initializeRouters();
+    this.initializeRouters()
   }
 
   private initializeRouters() {
-    this.router.post(`${this.path}`, this.createVillage);
-    this.router.delete(`${this.path}/:id`, this.deleteVillage);
+    this.router.post(`${this.path}`, this.createVillage)
+    this.router.delete(`${this.path}/:id`, this.deleteVillage)
   }
 
   private createVillage = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const villageData = req.body;
-    const createVillage = new this.village(villageData);
+    const villageData = req.body
+    const createVillage = new this.village(villageData)
     createVillage.save().then((village: Village) => {
-      res.send(village);
-    }).catch(next);
-    cache.updateTown();
+      res.send(village)
+    }).catch(next)
+    cache.updateTown()
   }
 
   private deleteVillage = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const id = req.params.id;
+    const id = req.params.id
     this.village.findByIdAndDelete(id).then(success => {
       if (success) {
-        res.send(200);
+        res.send(200)
       } else {
-        res.send(404);
+        res.send(404)
       }
-    }).catch(next);
-    cache.updateTown();
+    }).catch(next)
+    cache.updateTown()
   }
 }
 
-export default VillageController;
+export default VillageController

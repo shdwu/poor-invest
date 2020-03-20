@@ -1,20 +1,15 @@
-import { IsString, IsBoolean } from 'class-validator';
+import { IsString, IsBoolean } from 'class-validator'
 
-class CreateUserDto {
-  @IsString()
-  public name: string;
+class UserDto {
 
   @IsString()
-  public phone: string;
+  public username: string
 
   @IsString()
-  public username: string;
-
-  @IsString()
-  public password: string;
+  public password: string
 
   @IsBoolean()
-  public isBureau: boolean;
+  public admin: boolean
 }
 
-export default CreateUserDto;
+export { UserDto }

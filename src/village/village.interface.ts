@@ -1,8 +1,9 @@
-import Town from '../town/town.interface';
+/**
+ * 村镇，街道
+ */
 
 export default interface Village {
   _id: string;
-  town: Town;
-  // 村名
+  // 村名,或者街道名
   name: string;
 }

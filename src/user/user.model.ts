@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt-nodejs'
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: String,
-  admin: Boolean,
+  roles: Array,
   village: {
     ref: 'Village',
     type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,7 @@ userSchema.pre('save', function save(next) {
   next()
 })
 
-const comparePassword: comparePasswordFunction = function(candidatePassword, cb) {
+const comparePassword: comparePasswordFunction = function(candidatePassword) {
   return bcrypt.compareSync(candidatePassword, this.password)
 }
 

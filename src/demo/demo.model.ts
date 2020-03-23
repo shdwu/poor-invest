@@ -1,5 +1,5 @@
-import Demo from './demo.interface';
-import * as mongoose from 'mongoose';
+import Demo from './demo.interface'
+import * as mongoose from 'mongoose'
 
 const demoSchema = new mongoose.Schema({
   name: String,
@@ -16,11 +16,11 @@ const demoSchema = new mongoose.Schema({
   jobType: String,
   income: String,
   companyName: String,
-  companyAddr: String
-}, { timestamps: true });
+  companyAddr: String,
+}, { timestamps: true })
 
-const allModel = mongoose.model<Demo & mongoose.Document>('All', demoSchema);
+const allModel = mongoose.model<Demo & mongoose.Document>('All', demoSchema)
 
-const partModel = mongoose.model<Demo & mongoose.Document>('Part', demoSchema);
+const partModel = mongoose.model<Demo & mongoose.Document>('Part', demoSchema)
 
-export default  {allModel, partModel};
+export default  {allModel, partModel}

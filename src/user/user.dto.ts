@@ -1,4 +1,5 @@
-import { IsString, IsBoolean } from 'class-validator'
+import { IsString, IsArray } from 'class-validator'
+import { UserRole } from './roles.enum'
 
 class UserDto {
 
@@ -8,8 +9,10 @@ class UserDto {
   @IsString()
   public password: string
 
-  @IsBoolean()
-  public admin: boolean
+  public village: string
+
+  @IsArray()
+  public roles: UserRole[]
 }
 
 export { UserDto }

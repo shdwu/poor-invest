@@ -1,14 +1,14 @@
-import { IsString } from 'class-validator';
+import { IsString } from 'class-validator'
 
 class PostLoginDto {
   @IsString()
-  public username: string;
+  public username: string
 
   @IsString()
-  public password: string;
+  public password: string
 
   @IsString()
-  public code: string;
+  public code: string
 }
 
-export default PostLoginDto;
+export default PostLoginDto

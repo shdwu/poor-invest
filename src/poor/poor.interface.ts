@@ -1,43 +1,41 @@
-import Town from '../town/town.interface';
-import Village from '../village/village.interface';
+import { Village } from '../village/village.interface'
 
 export default interface Poor {
   // 姓名
-  name: string;
+  name: string
   // 乡镇
-  town: Town;
-  village: Village;
-  team: string;
+  village: Village
+  team: string
   cell: {
     // 户编号
     cellCode: string,
     // 与户主关系
     relationship: string,
-  };
+  }
   // 身份证号
-  userCode: string;
+  userCode: string
   // 联系电话
-  phone: string;
+  phone: string
   // 就业情况
-  jobState: string;
+  jobState: string
   // 无劳动力状态
-  state: string;
+  state: string
   // 是否就业
-  isJob: string;
+  isJob: string
   // 就业类型
-  jobType: string;
+  jobType: string
   // 具体工种
-  workType: string;
+  workType: string
   // 就业地
-  jobAdd: string;
+  jobAdd: string
   // 工资
-  salary: string;
+  salary: string
   // 是否有培训意愿
-  train: string;
+  train: string
   // 培训意愿项目
-  trainItem: string;
+  trainItem: string
   // 未就业原因
-  noJobSeason: string;
+  noJobSeason: string
 
   // 帮扶人信息
   helpPerson: {
@@ -47,5 +45,5 @@ export default interface Poor {
     position: string,
     // 联系电话
     phone: string
-  };
+  }
 }

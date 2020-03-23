@@ -1,11 +1,11 @@
-import { IsString } from 'class-validator';
+import { IsString } from 'class-validator'
 
 class AddDictDto {
   @IsString()
-  public key: string;
+  public key: string
 
   @IsString()
-  public value: string;
+  public value: string
 }
 
-export default AddDictDto;
+export default AddDictDto

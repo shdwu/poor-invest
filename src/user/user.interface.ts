@@ -1,4 +1,4 @@
-import Village from '../village/village.interface'
+import { Village } from '../village/village.interface'
 
 interface User {
   _id: string
@@ -7,11 +7,11 @@ interface User {
   // 密码，用于系统登录
   password: string
   // 是否属于就业局
-  admin: boolean
+  roles: string[]
   village: Village
   comparePassword: comparePasswordFunction
 }
 
-export type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => void) => boolean
+export type comparePasswordFunction = (candidatePassword: string) => boolean
 
 export { User }

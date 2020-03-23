@@ -8,6 +8,9 @@ interface User {
   password: string
   // 是否属于就业局
   roles: string[]
+  // 乡（镇）
+  town: Town
+  // 行政村
   village: Village
   comparePassword: comparePasswordFunction
 }

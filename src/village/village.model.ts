@@ -4,11 +4,12 @@ import * as mongoose from 'mongoose'
 
 const villageSchema = new mongoose.Schema({
   name: String,
+  town: {
+    ref: 'Town',
+    type: mongoose.Schema.Types.ObjectId,
+  },
 }, { timestamps: true })
 
-villageSchema.post('save', doc => {
-
-})
 
 const villageModel = mongoose.model<Village & mongoose.Document>('Village', villageSchema)
 

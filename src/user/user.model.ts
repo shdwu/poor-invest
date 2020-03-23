@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: String,
   roles: Array,
+  town: {
+    ref: 'Town',
+    type: mongoose.Schema.Types.ObjectId,
+  },
   village: {
     ref: 'Village',
     type: mongoose.Schema.Types.ObjectId,

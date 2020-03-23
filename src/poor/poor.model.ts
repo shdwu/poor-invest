@@ -2,19 +2,20 @@ import Poor from './poor.interface'
 import * as mongoose from 'mongoose'
 
 const poorSchema = new mongoose.Schema({
+  // 姓名
   name: String,
-  town: {
-    ref: 'Town',
-    type: mongoose.Schema.Types.ObjectId,
-  },
+  // 村社街道
   village: {
     ref: 'Village',
     type: mongoose.Schema.Types.ObjectId,
   },
-  team: String,
-  userCode: {type: String, unique: true},
-  phone: String,
-  jobState: String,
+  // 身份证号
+  idcard: {type: String, unique: true},
+  // 详细住址
+  addr: String,
+  // 就业状态 是否就业
+  jobState: Boolean,
+
   state: String,
   isJob: String,
   wantJob: String,

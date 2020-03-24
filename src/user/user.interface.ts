@@ -1,4 +1,5 @@
-import { Village } from '../village/village.interface'
+import { Village } from '../village'
+import { Town } from '../town'
 
 interface User {
   _id: string

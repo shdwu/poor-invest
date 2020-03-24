@@ -3,7 +3,7 @@ import { User, userModel } from '../user'
 import * as mongoose from 'mongoose'
 
 const villageSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, unique: true },
   town: {
     ref: 'Town',
     type: mongoose.Schema.Types.ObjectId,

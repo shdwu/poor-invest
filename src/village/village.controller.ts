@@ -16,11 +16,17 @@ class VillageController implements Controller {
   }
 
   private initializeRouters() {
+    this.router.get(`${this.path}/byTownId/:id`, this.getVillagesByTownId)
     this.router.get(this.path, this.getAllVillage)
     this.router.get(`${this.path}/search`, this.searchByName)
     this.router.post(`${this.path}`, this.createVillage)
     this.router.post(`${this.path}/:id`, this.modifyVillage)
     this.router.delete(`${this.path}/:id`, this.deleteVillage)
+  }
+
+  private getVillagesByTownId = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const villages = await this.village.find({town: req.params.id})
+    res.send(villages)
   }
 
   private getAllVillage = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -43,7 +49,7 @@ class VillageController implements Controller {
       res.send(village)
       // 为乡镇初始化一个管理员账号
       const username = pinyin(village.name.slice(0, 2), {style: pinyin.STYLE_NORMAL}).join('')
-      const createUser = new this.user({
+      new this.user({
         username,
         password: '123456',
         village,

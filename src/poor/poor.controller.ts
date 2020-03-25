@@ -17,10 +17,9 @@ class PoorController implements Controller {
 
   private initializeRouters() {
     this.router.get(this.path, this.getPoors)
-    this.router.get(`${this.path}/cellers`, this.getCellers)
     this.router.get(`${this.path}/search`, this.searchPoors)
     this.router.get(`${this.path}/:id`, this.getPoorById)
-    this.router.post(`${this.path}`, this.addPoor)
+    this.router.post(`${this.path}`, this.addOrUpdatePoor)
     this.router.post(`${this.path}/:id`, this.updatePoor)
     this.router.delete(`${this.path}/:id`, this.delPoor)
   }
@@ -76,22 +75,28 @@ class PoorController implements Controller {
     }).catch(next)
   }
 
-  private addPoor = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private addOrUpdatePoor = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const poorData = req.body
     if ( !req.user.village ) {
       return next('用户没有从属的村镇, 无法完成此操作')
     }
     poorData.village = req.user.village
-    poorData.town = await this.poor.find(req.user.village.town)
-    const createPoor = new this.poor(poorData)
-    createPoor.save().then(poor => {
-      res.send(poor)
-    }).catch(e => {
-      if (e.code === 11000) {
-        e.message = `${poorData.name} 该用户已存在`
-      }
-      return next(e)
-    })
+    poorData.town = req.user.town
+    if (poorData._id) {
+      this.poor.findByIdAndUpdate(poorData._id, poorData).then(poor => {
+        res.send(poor)
+      })
+    } else {
+      const createPoor = new this.poor(poorData)
+      createPoor.save().then(poor => {
+        res.send(poor)
+      }).catch(e => {
+        if (e.code === 11000) {
+          e.message = `${poorData.name} 该用户已存在`
+        }
+        return next(e)
+      })
+    }
   }
 
   private updatePoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {

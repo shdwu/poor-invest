@@ -42,10 +42,10 @@ export class TownController implements Controller {
     const townData: Town = req.body
     try {
       if (townData._id) {
-        const updateTown = await this.town.findByIdAndUpdate(townData._id, townData)
+        const updateTown = await this.town.findByIdAndUpdate(townData._id, { name: townData.name})
         res.send(updateTown)
       } else {
-        const addTown = await new this.town(townData).save()
+        const addTown = await new this.town({ name: townData.name }).save()
         if (req.body.villages && IsArray(req.body.villages)) {
           req.body.villages.forEach(async (e: Village) => {
             e.town = addTown
@@ -56,6 +56,7 @@ export class TownController implements Controller {
               username,
               password: '123456',
               village: vill,
+              town: vill.town,
               roles: UserRole.NORMAL,
             }).save()
           })

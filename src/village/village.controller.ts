@@ -53,6 +53,7 @@ class VillageController implements Controller {
         username,
         password: '123456',
         village,
+        town: village.town,
         roles: UserRole.NORMAL,
       }).save()
     }).catch(next)

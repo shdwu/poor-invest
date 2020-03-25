@@ -25,7 +25,7 @@ class PoorController implements Controller {
   }
 
   private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if ( !req.user.village && req.user.roles.indexOf('ADMIN') === -1) {
+    if ( !req.user.town && req.user.roles.indexOf('ADMIN') === -1) {
       return next('用户没有从属的村镇, 无法完成此操作')
     }
     // tslint:disable-next-line: radix
@@ -33,7 +33,7 @@ class PoorController implements Controller {
     delete req.query.page
     const search: any = req.query
     if (req.user.roles.indexOf('ADMIN') === -1 ) {
-      search.village =  req.user.village
+      search.town =  req.user.town
     }
 
     if (req.query.name) {
@@ -77,10 +77,9 @@ class PoorController implements Controller {
 
   private addOrUpdatePoor = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const poorData = req.body
-    if ( !req.user.village ) {
+    if ( !req.user.town ) {
       return next('用户没有从属的村镇, 无法完成此操作')
     }
-    poorData.village = req.user.village
     poorData.town = req.user.town
     if (poorData._id) {
       this.poor.findByIdAndUpdate(poorData._id, poorData).then(poor => {

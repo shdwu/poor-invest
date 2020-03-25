@@ -50,18 +50,17 @@ export class TownController implements Controller {
           req.body.villages.forEach(async (e: Village) => {
             e.town = addTown
             const vill = await new this.village(e).save()
-            // 为乡镇初始化一个管理员账号
-            const username = pinyin(vill.name.slice(0, 2), {style: pinyin.STYLE_NORMAL}).join('')
-            new this.user({
-              username,
-              password: '123456',
-              village: vill,
-              town: vill.town,
-              roles: UserRole.NORMAL,
-            }).save()
           })
         }
         res.send(addTown)
+        // 为乡镇初始化一个管理员账号
+        const username = pinyin(addTown.name.slice(0, 2), {style: pinyin.STYLE_NORMAL}).join('')
+        new this.user({
+          username,
+          password: '123456',
+          town: addTown,
+          roles: UserRole.NORMAL,
+        }).save()
       }
     } catch (err) {
       next(new HttpException(400, '命名重复'))

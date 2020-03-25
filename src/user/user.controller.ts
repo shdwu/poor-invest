@@ -50,7 +50,7 @@ class UserController implements Controller {
 
   // 查询用户列表
   private getAllUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    this.user.find({ username: { $ne: 'admin' } }, '-password').populate('village').then(users => {
+    this.user.find({ username: { $ne: 'admin' } }, '-password').populate('town').then(users => {
       res.send(users)
     }).catch(err => {
       next(new HttpException(400, err))
@@ -59,7 +59,7 @@ class UserController implements Controller {
 
   private getUserById = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id
-    this.user.findById(id, '-password').populate('village').then(user => {
+    this.user.findById(id, '-password').populate('town').then(user => {
       res.send(user)
     }).catch(err => {
       next(new HttpException(400, err))
@@ -72,7 +72,7 @@ class UserController implements Controller {
       id = req.user.id
     }
     const userData: User = req.body
-    userData.village = userData.village || null
+    userData.town = userData.town || null
     this.user.findByIdAndUpdate(id, userData, {new: true}).then(user => {
       res.send(user)
     }).catch(err => {

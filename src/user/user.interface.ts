@@ -11,8 +11,6 @@ interface User {
   roles: string[]
   // 乡（镇）
   town: Town
-  // 行政村
-  village: Village
   comparePassword: comparePasswordFunction
 }
 

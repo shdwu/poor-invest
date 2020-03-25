@@ -47,16 +47,7 @@ class VillageController implements Controller {
     const createVillage = new this.village(villageData)
     createVillage.save().then((village: Village) => {
       res.send(village)
-      // 为乡镇初始化一个管理员账号
-      const username = pinyin(village.name.slice(0, 2), {style: pinyin.STYLE_NORMAL}).join('')
-      new this.user({
-        username,
-        password: '123456',
-        village,
-        town: village.town,
-        roles: UserRole.NORMAL,
-      }).save()
-    }).catch(next)
+    })
   }
 
   private modifyVillage = async (req: express.Request, res: express.Response, next: express.NextFunction) => {

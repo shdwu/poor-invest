@@ -10,10 +10,6 @@ const userSchema = new mongoose.Schema({
     ref: 'Town',
     type: mongoose.Schema.Types.ObjectId,
   },
-  village: {
-    ref: 'Village',
-    type: mongoose.Schema.Types.ObjectId,
-  },
 }, { timestamps: true })
 
 userSchema.pre('save', function save(next) {

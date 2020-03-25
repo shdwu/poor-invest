@@ -45,7 +45,7 @@ const poorSchema = new mongoose.Schema({
   // 脱贫属性
   outPoorMeta: String,
   // 脱贫年度
-  outPoorYear: Number,
+  outPoorYear: String,
   // 致贫原因
   poorReason: String,
   // 危房户

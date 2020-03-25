@@ -39,7 +39,7 @@ export default interface Poor {
   // 脱贫属性
   outPoorMeta: string,
   // 脱贫年度
-  outPoorYear: number,
+  outPoorYear: string,
   // 致贫原因
   poorReason: string,
   // 危房户

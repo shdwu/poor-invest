@@ -11,8 +11,6 @@ class UserDto {
 
   public town: string
 
-  public village: string
-
   @IsArray()
   public roles: UserRole[]
 }

@@ -9,6 +9,8 @@ class UserDto {
   @IsString()
   public password: string
 
+  public town: string
+
   public village: string
 
   @IsArray()

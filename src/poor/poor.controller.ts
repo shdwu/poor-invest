@@ -18,7 +18,7 @@ class PoorController implements Controller {
     this.router.get(`${this.path}/cellers`, this.getCellers)
     this.router.get(`${this.path}/search`, this.searchPoors)
     this.router.get(`${this.path}/:id`, this.getPoorById)
-    this.router.post(`${this.path}`, validateMiddleware(CreatePoorDto), this.addPoor)
+    this.router.post(`${this.path}`, this.addPoor)
     this.router.post(`${this.path}/:id`, this.updatePoor)
     this.router.delete(`${this.path}/:id`, this.delPoor)
   }
@@ -28,9 +28,10 @@ class PoorController implements Controller {
     const page = parseInt(req.query.page) || 1
     delete req.query.page
     const search: any = req.query
-    if ( req.user.town ) {
-      search.town =  req.user.town || search.town
+    if (req.user.roles.indexOf('ADMIN') === -1 ) {
+      search.village =  req.user.village || search.village
     }
+
     if (req.query.name) {
       const nameReg = new RegExp(req.query.name, 'i')
       search.name = nameReg
@@ -80,6 +81,8 @@ class PoorController implements Controller {
 
   private addPoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const poorData = req.body
+    poorData.town = req.user.town
+    poorData.village = req.user.village
     const createPoor = new this.poor(poorData)
     createPoor.save().then(poor => {
       res.send(poor)

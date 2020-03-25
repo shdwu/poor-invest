@@ -1,6 +1,7 @@
 import Controller from '../interfaces/controller.interfaces'
 import * as express from 'express'
 import poorModel from './poor.model'
+import { townModel } from '../town'
 import validateMiddleware from '../middleware/validation.middleware'
 import CreatePoorDto from './poor.dto'
 
@@ -8,6 +9,7 @@ class PoorController implements Controller {
   public path = '/poor'
   public router = express.Router()
   private poor = poorModel
+  private town = townModel
 
   constructor() {
     this.initializeRouters()
@@ -24,12 +26,15 @@ class PoorController implements Controller {
   }
 
   private getPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if ( !req.user.village && req.user.roles.indexOf('ADMIN') === -1) {
+      return next('用户没有从属的村镇, 无法完成此操作')
+    }
     // tslint:disable-next-line: radix
     const page = parseInt(req.query.page) || 1
     delete req.query.page
     const search: any = req.query
     if (req.user.roles.indexOf('ADMIN') === -1 ) {
-      search.village =  req.user.village || search.village
+      search.village =  req.user.village
     }
 
     if (req.query.name) {
@@ -48,14 +53,6 @@ class PoorController implements Controller {
           count,
         })
       }).catch(next)
-    }).catch(next)
-  }
-
-  private getCellers = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const cellCode = req.query.cellCode
-    const id = req.query.current
-    this.poor.find({'_id': {$ne: id}, 'cell.cellCode': cellCode }).then(poors => {
-      res.send(poors)
     }).catch(next)
   }
 
@@ -79,10 +76,13 @@ class PoorController implements Controller {
     }).catch(next)
   }
 
-  private addPoor = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private addPoor = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const poorData = req.body
-    poorData.town = req.user.town
+    if ( !req.user.village ) {
+      return next('用户没有从属的村镇, 无法完成此操作')
+    }
     poorData.village = req.user.village
+    poorData.town = await this.poor.find(req.user.village.town)
     const createPoor = new this.poor(poorData)
     createPoor.save().then(poor => {
       res.send(poor)

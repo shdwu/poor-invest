@@ -70,16 +70,27 @@ class PoorController implements Controller {
     }).catch(next)
   }
 
-  private searchPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private searchPoors = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const search = req.query.search
+    const page = req.query.page || 1
     const reg = new RegExp(search, 'i')
     let query
     if ( req.user.town ) {
       query =  { town:  req.user.town}
     }
-    this.poor.find(query).or([{ name: {$regex: reg}}, { phone: {$regex: reg}}, { userCode: {$regex: reg}}])
-    .populate('town').populate('village').then(poors => {
-      res.send(poors)
+    const count = await this.poor
+      .find(query).or(
+        [{ name: {$regex: reg}}, { houseCode: {$regex: reg}}, { personCode: {$regex: reg}}, {idcard: {$regex: reg}}]
+        ).count()
+    this.poor.find(query).or(
+      [{ name: {$regex: reg}}, { houseCode: {$regex: reg}}, { personCode: {$regex: reg}}, {idcard: {$regex: reg}}]
+    )
+    .skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
+      res.send({
+        poors,
+        page,
+        count,
+      })
     }).catch(next)
   }
 

@@ -31,18 +31,33 @@ class PoorController implements Controller {
     // tslint:disable-next-line: radix
     const page = parseInt(req.query.page) || 1
     delete req.query.page
-    const search: any = req.query
+    const search: any = {}
     if (req.user.roles.indexOf('ADMIN') === -1 ) {
       search.town =  req.user.town
+    } else {
+      if (req.query.town) {
+        search.town = req.query.town
+      }
+      if (req.query.village) {
+        search.village = req.query.village
+      }
     }
 
     if (req.query.name) {
       const nameReg = new RegExp(req.query.name, 'i')
       search.name = nameReg
     }
-    if (req.query.userCode) {
-      const cardReg = new RegExp(req.query.userCode, 'i')
-      search.userCode = cardReg
+    if (req.query.houseCode) {
+      const houseReg = new RegExp(req.query.houseCode, 'i')
+      search.houseCode = houseReg
+    }
+    if (req.query.personCode) {
+      const personCodeReg = new RegExp(req.query.personCode, 'i')
+      search.personCode = personCodeReg
+    }
+    if (req.query.idcard) {
+      const idcardReg = new RegExp(req.query.idcard, 'i')
+      search.idcard = idcardReg
     }
     this.poor.find(search).count().then(count => {
       this.poor.find(search).skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {

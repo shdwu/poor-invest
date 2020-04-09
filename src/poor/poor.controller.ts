@@ -32,9 +32,16 @@ class PoorController implements Controller {
     // tslint:disable-next-line: radix
     const page = parseInt(req.query.page) || 1
     delete req.query.page
-    const search: any = req.query
+    const search: any = {}
     if (req.user.roles.indexOf('ADMIN') === -1 ) {
       search.town =  req.user.town
+    } else {
+      if (req.query.town) {
+        search.town = req.query.town
+      }
+      if (req.query.village) {
+        search.village = req.query.village
+      }
     }
 
     if (req.query.village) {
@@ -45,9 +52,17 @@ class PoorController implements Controller {
       const nameReg = new RegExp(req.query.name, 'i')
       search.name = nameReg
     }
-    if (req.query.userCode) {
-      const cardReg = new RegExp(req.query.userCode, 'i')
-      search.userCode = cardReg
+    if (req.query.houseCode) {
+      const houseReg = new RegExp(req.query.houseCode, 'i')
+      search.houseCode = houseReg
+    }
+    if (req.query.personCode) {
+      const personCodeReg = new RegExp(req.query.personCode, 'i')
+      search.personCode = personCodeReg
+    }
+    if (req.query.idcard) {
+      const idcardReg = new RegExp(req.query.idcard, 'i')
+      search.idcard = idcardReg
     }
     this.poor.find(search).count().then(count => {
       this.poor.find(search).skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
@@ -60,16 +75,27 @@ class PoorController implements Controller {
     }).catch(next)
   }
 
-  private searchPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private searchPoors = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const search = req.query.search
+    const page = req.query.page || 1
     const reg = new RegExp(search, 'i')
     let query
     if ( req.user.town ) {
       query =  { town:  req.user.town}
     }
-    this.poor.find(query).or([{ name: {$regex: reg}}, { phone: {$regex: reg}}, { userCode: {$regex: reg}}])
-    .populate('town').populate('village').then(poors => {
-      res.send(poors)
+    const count = await this.poor
+      .find(query).or(
+        [{ name: {$regex: reg}}, { houseCode: {$regex: reg}}, { personCode: {$regex: reg}}, {idcard: {$regex: reg}}]
+        ).count()
+    this.poor.find(query).or(
+      [{ name: {$regex: reg}}, { houseCode: {$regex: reg}}, { personCode: {$regex: reg}}, {idcard: {$regex: reg}}]
+    )
+    .skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
+      res.send({
+        poors,
+        page,
+        count,
+      })
     }).catch(next)
   }
 

@@ -94,6 +94,8 @@ const poorSchema = new mongoose.Schema({
   helpPerson: String,
   helpPersonPosition: String,
   helpPersonPhone: String,
+  createType: String,
+  createAdd: String,
 }, { timestamps: true })
 
 const poorModel = mongoose.model<Poor & mongoose.Document>('Poor', poorSchema)

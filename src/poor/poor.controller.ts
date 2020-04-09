@@ -2,6 +2,7 @@ import Controller from '../interfaces/controller.interfaces'
 import * as express from 'express'
 import poorModel from './poor.model'
 import { townModel } from '../town'
+import { ObjectId } from 'mongodb'
 import validateMiddleware from '../middleware/validation.middleware'
 import CreatePoorDto from './poor.dto'
 
@@ -34,6 +35,10 @@ class PoorController implements Controller {
     const search: any = req.query
     if (req.user.roles.indexOf('ADMIN') === -1 ) {
       search.town =  req.user.town
+    }
+
+    if (req.query.village) {
+      search.village = new ObjectId(req.query.village)
     }
 
     if (req.query.name) {

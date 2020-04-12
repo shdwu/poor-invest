@@ -88,4 +88,6 @@ export default interface Poor {
   helpPerson: string,
   helpPersonPosition: string,
   helpPersonPhone: string,
+  createType: string,
+  createAdd: string
 }

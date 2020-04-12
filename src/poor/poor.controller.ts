@@ -64,8 +64,8 @@ class PoorController implements Controller {
       const idcardReg = new RegExp(req.query.idcard, 'i')
       search.idcard = idcardReg
     }
-    if (req.query.updatedAt && req.query.updatedAt.length === 2) {
-      req.query.updatedAt = {
+    if (Array.isArray(req.query.updatedAt) && req.query.updatedAt.length === 2) {
+      search.updatedAt = {
         $gte: new Date(req.query.updatedAt[0]),
         $lte: new Date(req.query.updatedAt[1]),
       }

@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser'
 import mongoose = require('mongoose')
 import * as bluebird from 'bluebird'
 import session = require('express-session')
+import redis = require('redis')
 import * as passport from 'passport'
 import expressValidator = require('express-validator')
 import logger from './utils/logger'
@@ -38,11 +39,22 @@ class App {
     this.app.use(bodyParser.json())
     this.app.use(bodyParser.urlencoded({ extended: true }))
     this.app.use(expressValidator())
+
+    // redis
+    const redisClient = redis.createClient()
+    const redisStore = require('connect-redis')(session)
+
     this.app.use(session({
       resave: false,
       saveUninitialized: true,
       secret: process.env.SESSION_SECRET,
       cookie: { httpOnly: false, maxAge: 3600 * 1000},
+      store: new redisStore({
+        host: process.env.redisHost,
+        port: process.env.redisPort,
+        client: redisClient,
+        ttl: process.env.redisTTL,
+      }),
     }))
 
     this.app.use(passport.initialize())

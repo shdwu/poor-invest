@@ -30,7 +30,13 @@ class VillageController implements Controller {
   }
 
   private getAllVillage = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const villages = await this.village.find()
+    let villages;
+    if (req.user.town) {
+      villages = await this.village.find({town: req.user.town})
+    } else {
+      villages = await this.village.find()
+    }
+    
     res.send(villages)
   }
 

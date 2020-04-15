@@ -64,6 +64,12 @@ class PoorController implements Controller {
       const idcardReg = new RegExp(req.query.idcard, 'i')
       search.idcard = idcardReg
     }
+    if (Array.isArray(req.query.updatedAt) && req.query.updatedAt.length === 2) {
+      search.updatedAt = {
+        $gte: new Date(req.query.updatedAt[0]),
+        $lte: new Date(req.query.updatedAt[1]),
+      }
+    }
     this.poor.find(search).count().then(count => {
       this.poor.find(search).skip((page - 1) * 10).limit(10).populate('town').populate('village').then(poors => {
         res.send({

@@ -5,6 +5,8 @@ import { townModel } from '../town'
 import { ObjectId } from 'mongodb'
 import validateMiddleware from '../middleware/validation.middleware'
 import CreatePoorDto from './poor.dto'
+import excelConfig from './excel.conf'
+import nodeExcel from 'excel-export'
 
 class PoorController implements Controller {
   public path = '/poor'
@@ -19,6 +21,7 @@ class PoorController implements Controller {
   private initializeRouters() {
     this.router.get(this.path, this.getPoors)
     this.router.get(`${this.path}/search`, this.searchPoors)
+    this.router.get(`${this.path}/export`, this.exportPoors)
     this.router.get(`${this.path}/:id`, this.getPoorById)
     this.router.post(`${this.path}`, this.addOrUpdatePoor)
     this.router.post(`${this.path}/:id`, this.updatePoor)
@@ -79,6 +82,58 @@ class PoorController implements Controller {
         })
       }).catch(next)
     }).catch(next)
+  }
+
+  private exportPoors = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if ( !req.user.town && req.user.roles.indexOf('ADMIN') === -1) {
+      return next('用户没有从属的村镇, 无法完成此操作')
+    }
+    // tslint:disable-next-line: radix
+    delete req.query.page
+    const search: any = {}
+    if (req.user.roles.indexOf('ADMIN') === -1 ) {
+      search.town =  req.user.town
+    } else {
+      if (req.query.town) {
+        search.town = req.query.town
+      }
+      if (req.query.village) {
+        search.village = req.query.village
+      }
+    }
+
+    if (req.query.village) {
+      search.village = new ObjectId(req.query.village)
+    }
+
+    if (req.query.name) {
+      const nameReg = new RegExp(req.query.name, 'i')
+      search.name = nameReg
+    }
+    if (req.query.houseCode) {
+      const houseReg = new RegExp(req.query.houseCode, 'i')
+      search.houseCode = houseReg
+    }
+    if (req.query.personCode) {
+      const personCodeReg = new RegExp(req.query.personCode, 'i')
+      search.personCode = personCodeReg
+    }
+    if (req.query.idcard) {
+      const idcardReg = new RegExp(req.query.idcard, 'i')
+      search.idcard = idcardReg
+    }
+    if (Array.isArray(req.query.updatedAt) && req.query.updatedAt.length === 2) {
+      search.updatedAt = {
+        $gte: new Date(req.query.updatedAt[0]),
+        $lte: new Date(req.query.updatedAt[1]),
+      }
+    }
+      this.poor.find(search).populate('town').populate('village').then(poors => {
+        const result = nodeExcel.execute(excelConfig)
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats')
+        res.setHeader('Content-Disposition', 'attachment; filename=' + 'Report.xlsx')
+        res.end(result, 'binary')
+      }).catch(next)
   }
 
   private searchPoors = async (req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -5,12 +5,13 @@ import { townModel } from '../town'
 import { ObjectId } from 'mongodb'
 import validateMiddleware from '../middleware/validation.middleware'
 import CreatePoorDto from './poor.dto'
-import excelConfig from './excel.conf'
-import nodeExcel from 'excel-export'
+import { conf } from './excel.conf'
+import * as nodeExcel from 'excel-export'
 
 class PoorController implements Controller {
   public path = '/poor'
   public router = express.Router()
+  public excelConf = conf
   private poor = poorModel
   private town = townModel
 
@@ -129,9 +130,24 @@ class PoorController implements Controller {
       }
     }
       this.poor.find(search).populate('town').populate('village').then(poors => {
-        const result = nodeExcel.execute(excelConfig)
+        this.excelConf.rows = []
+        poors.forEach(v => {
+          if (v.getJobStatus) {
+            this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
+              v.name, v.idcard, v.houseHead, v.houseRelation, '是', v.jobDetail, v.jobAddr,
+            v.jobCompanyName, v.jobType, v.jobIncome, '', '', '', '', '', '', '', '', v.helpPerson,
+            v.helpPersonPosition, v.helpPersonPhone])
+          } else {
+            this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
+              v.name, v.idcard, v.houseHead, v.houseRelation, '否', v.jobDetail, v.jobAddr,
+            v.jobCompanyName, v.jobType, v.jobIncome, v.noJobDetail, v.noJobSchool, v.noJobSchoolGrade,
+            v.noWorkAbility, v.wantWork, v.wantWorkAddr, v.wantPioneer, v.createType, v.helpPerson,
+            v.helpPersonPosition, v.helpPersonPhone])
+          }
+        })
+        const result = nodeExcel.execute(this.excelConf)
         res.setHeader('Content-Type', 'application/vnd.openxmlformats')
-        res.setHeader('Content-Disposition', 'attachment; filename=' + 'Report.xlsx')
+        res.setHeader('Content-Disposition', 'attachment; filename=' + 'Export.xlsx')
         res.end(result, 'binary')
       }).catch(next)
   }

@@ -20,7 +20,7 @@ class AuthController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/login`, validationMiddleware(PostLoginDto), this.login)
+    this.router.post(`${this.path}/login`,  this.login)
     this.router.get(`${this.path}/logout`,  isAuthenticated, this.logout)
     this.router.get(`${this.path}/current`, isAuthenticated, this.current)
     this.router.get(`${this.path}/captcha`, this.captcha)

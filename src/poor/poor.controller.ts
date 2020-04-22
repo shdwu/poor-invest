@@ -174,6 +174,7 @@ class PoorController implements Controller {
     }
     poorData.town = req.user.town
     if (poorData._id) {
+      delete poorData.updatedAt
       this.poor.findByIdAndUpdate(poorData._id, poorData).then(poor => {
         res.send(poor)
       })

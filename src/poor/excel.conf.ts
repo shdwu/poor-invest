@@ -134,6 +134,10 @@ conf.cols = [{
   type: 'string',
   beforeCellWrite: convetUndefined,
 },
+{
+  caption: '更新时间',
+  type: 'string',
+},
 ]
 
 export { conf }

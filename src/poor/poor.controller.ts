@@ -136,13 +136,13 @@ class PoorController implements Controller {
             this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
               v.name, v.idcard, v.houseHead, v.houseRelation, '是', v.jobDetail, v.jobAddr,
             v.jobCompanyName, v.jobType, v.jobIncome, '', '', '', '', '', '', '', '', v.helpPerson,
-            v.helpPersonPosition, v.helpPersonPhone])
+            v.helpPersonPosition, v.helpPersonPhone, v.updatedAt])
           } else {
             this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
               v.name, v.idcard, v.houseHead, v.houseRelation, '否', '', '',
             '', '', '', v.noJobDetail, v.noJobSchool, v.noJobSchoolGrade,
             v.noWorkAbility, v.wantWork, v.wantWorkAddr, v.wantPioneer, v.createType, v.helpPerson,
-            v.helpPersonPosition, v.helpPersonPhone])
+            v.helpPersonPosition, v.helpPersonPhone, v.updatedAt])
           }
         })
         const result = nodeExcel.execute(this.excelConf)

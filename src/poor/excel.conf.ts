@@ -1,3 +1,5 @@
+import { asString } from 'date-format'
+
 const conf: any = {}
 
 function convetUndefined(row: any, cellData: any) {
@@ -6,6 +8,10 @@ function convetUndefined(row: any, cellData: any) {
 
 function convetBool(row: any, cellData: any) {
   return cellData ? '是' : '否'
+}
+
+function convetDate(row: any, cellData: any) {
+  return cellData ? asString('yyyy-MM-dd hh:mm:ss', cellData) : ''
 }
 
 // conf.stylesXmlFile = 'styles.xml'
@@ -137,6 +143,7 @@ conf.cols = [{
 {
   caption: '更新时间',
   type: 'string',
+  beforeCellWrite: convetDate,
 },
 ]
 

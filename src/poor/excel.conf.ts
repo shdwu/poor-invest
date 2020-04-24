@@ -126,6 +126,16 @@ conf.cols = [{
   beforeCellWrite: convetUndefined,
 },
 {
+  caption: '是否有培训意愿',
+  type: 'string',
+  beforeCellWrite: convetBool,
+},
+{
+  caption: '培训详情',
+  type: 'string',
+  beforeCellWrite: convetUndefined,
+},
+{
   caption: '帮扶人',
   type: 'string',
   beforeCellWrite: convetUndefined,

@@ -1,1 +1,1 @@
-export function asString(format: string, date: Date) :any;
+export function asString(format: string, date: Date) :string;

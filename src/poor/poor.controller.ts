@@ -135,13 +135,15 @@ class PoorController implements Controller {
           if (v.getJobStatus) {
             this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
               v.name, v.idcard, v.houseHead, v.houseRelation, '是', v.jobDetail, v.jobAddr,
-            v.jobCompanyName, v.jobType, v.jobIncome, '', '', '', '', '', '', '', '', v.helpPerson,
+            v.jobCompanyName, v.jobType, v.jobIncome, '', '', '', '', '', '', '', '',
+            v.wantTrain, v.wantTrainType, v.helpPerson,
             v.helpPersonPosition, v.helpPersonPhone, v.updatedAt])
           } else {
             this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
               v.name, v.idcard, v.houseHead, v.houseRelation, '否', '', '',
             '', '', '', v.noJobDetail, v.noJobSchool, v.noJobSchoolGrade,
-            v.noWorkAbility, v.wantWork, v.wantWorkAddr, v.wantPioneer, v.createType, v.helpPerson,
+            v.noWorkAbility, v.wantWork, v.wantWorkAddr, v.wantPioneer, v.createType,
+            v.wantTrain, v.wantTrainType, v.helpPerson,
             v.helpPersonPosition, v.helpPersonPhone, v.updatedAt])
           }
         })

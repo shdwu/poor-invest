@@ -1,3 +1,5 @@
+import { asString } from 'date-format'
+
 const conf: any = {}
 
 function convetUndefined(row: any, cellData: any) {
@@ -6,6 +8,10 @@ function convetUndefined(row: any, cellData: any) {
 
 function convetBool(row: any, cellData: any) {
   return cellData ? '是' : '否'
+}
+
+function convetDate(row: any, cellData: any) {
+  return cellData ? asString('yyyy-MM-dd hh:mm:ss', cellData) : ''
 }
 
 // conf.stylesXmlFile = 'styles.xml'
@@ -125,6 +131,16 @@ conf.cols = [{
   beforeCellWrite: convetUndefined,
 },
 {
+  caption: '是否有培训意愿',
+  type: 'string',
+  beforeCellWrite: convetBool,
+},
+{
+  caption: '培训详情',
+  type: 'string',
+  beforeCellWrite: convetUndefined,
+},
+{
   caption: '帮扶人',
   type: 'string',
   beforeCellWrite: convetUndefined,
@@ -138,6 +154,11 @@ conf.cols = [{
   caption: '帮扶人电话',
   type: 'string',
   beforeCellWrite: convetUndefined,
+},
+{
+  caption: '更新时间',
+  type: 'string',
+  beforeCellWrite: convetDate,
 },
 ]
 

@@ -134,12 +134,12 @@ class PoorController implements Controller {
         poors.forEach(v => {
           if (v.getJobStatus) {
             this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
-              v.name, v.idcard, v.houseHead, v.houseRelation, '是', v.jobDetail, v.jobAddr,
+              v.name, v.idcard, v.phone, v.houseHead, v.houseRelation, '是', v.jobDetail, v.jobAddr,
             v.jobCompanyName, v.jobType, v.jobIncome, '', '', '', '', '', '', '', '', v.helpPerson,
             v.helpPersonPosition, v.helpPersonPhone])
           } else {
             this.excelConf.rows.push([v.town.name, v.village.name, v.houseCode, v.personCode,
-              v.name, v.idcard, v.houseHead, v.houseRelation, '否', '', '',
+              v.name, v.idcard, v.phone, v.houseHead, v.houseRelation, '否', '', '',
             '', '', '', v.noJobDetail, v.noJobSchool, v.noJobSchoolGrade,
             v.noWorkAbility, v.wantWork, v.wantWorkAddr, v.wantPioneer, v.createType, v.helpPerson,
             v.helpPersonPosition, v.helpPersonPhone])

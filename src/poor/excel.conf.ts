@@ -41,6 +41,11 @@ conf.cols = [{
   beforeCellWrite: convetUndefined,
 },
 {
+  caption: '联系电话',
+  type: 'string',
+  beforeCellWrite: convetUndefined,
+},
+{
   caption: '是否是户主',
   type: 'string',
   beforeCellWrite: convetBool,
